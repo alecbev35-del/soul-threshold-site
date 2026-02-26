@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(lsof -i :8080)",
+      "Bash(kill 98220)",
+      "Bash(identify /Users/alecbevelhimer/Desktop/SoulThreshold/assets/images/logo.png)",
+      "Bash(sips -g all /Users/alecbevelhimer/Desktop/SoulThreshold/assets/images/logo.png)",
+      "Bash(ls -la /Users/alecbevelhimer/Desktop/SoulThreshold/*.png /Users/alecbevelhimer/Desktop/SoulThreshold/*.html)",
+      "Bash(sips -z 630 630 /Users/alecbevelhimer/Desktop/SoulThreshold/assets/images/logo.png --out /Users/alecbevelhimer/Desktop/SoulThreshold/assets/images/og-image.png)",
+      "Bash(python3 -c \":*)",
+      "Bash(python3:*)"
+    ]
+  }
+}

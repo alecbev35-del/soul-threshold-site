@@ -1,0 +1,26 @@
+[build]
+  publish = "."
+
+# Redirect /blog/slug to /blog.html?post=slug for clean blog URLs
+[[redirects]]
+  from = "/blog/:slug"
+  to = "/blog.html?post=:slug"
+  status = 200
+
+# Headers for performance and security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

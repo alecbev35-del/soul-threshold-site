@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog — Soul Threshold</title>
+  <meta name="description" content="Reflections on grief, fear, breaking cycles, and finding clarity. From Soul Threshold." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/logo-180.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="theme-color" content="#0a0e2a" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Blog — Soul Threshold" />
+  <meta property="og:description" content="Reflections on grief, fear, breaking cycles, and finding clarity." />
+  <meta property="og:image" content="/assets/images/og-image.png" />
+  <meta property="og:url" content="https://soulthreshold.com/blog" />
+  <meta property="og:site_name" content="Soul Threshold" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Blog — Soul Threshold" />
+  <meta name="twitter:description" content="Reflections on grief, fear, breaking cycles, and finding clarity." />
+  <meta name="twitter:image" content="/assets/images/og-image.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+
+<div class="nebula-bg"></div>
+<canvas id="starfield"></canvas>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     NAVIGATION
+═══════════════════════════════════════════════════════════════════ -->
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="/assets/images/logo.png" alt="Soul Threshold" class="nav-logo-img" />
+    <span>Soul Threshold</span>
+  </a>
+
+  <button class="nav-toggle" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/work-with-me.html">Work With Me</a></li>
+    <li><a href="/blog.html">Blog</a></li>
+    <li><a href="/apply.html" class="nav-cta">Apply →</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SITE WRAPPER
+═══════════════════════════════════════════════════════════════════ -->
+<div class="site-wrapper">
+
+  <!-- ═══════════════════════════════════════════════════════════════════
+       BLOG
+  ═══════════════════════════════════════════════════════════════════ -->
+  <section class="section blog-section" style="padding-top: 160px;">
+    <div class="container">
+
+      <p class="section-eyebrow reveal">Reflections</p>
+      <h2 class="reveal">Blog</h2>
+      <div class="gold-rule-sm" style="margin-top:16px; margin-bottom:48px;"></div>
+
+      <!-- Blog grid (populated by JS) -->
+      <div id="blog-grid" class="blog-grid"></div>
+
+      <!-- Single post view (populated by JS when ?post= param exists) -->
+      <div id="blog-post-content" class="blog-post-page"></div>
+
+    </div>
+  </section>
+
+  <!-- Gold rule -->
+  <div class="gold-rule"></div>
+
+</div><!-- /site-wrapper -->
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════════════════════════ -->
+<footer>
+  <div style="margin-bottom:24px; opacity:0.3;">
+    <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
+      <path d="M5 38 L5 20 Q5 4 30 4 Q55 4 55 20 L55 38" stroke="#c9a84c" stroke-width="1.2" fill="none"/>
+      <line x1="5" y1="38" x2="55" y2="38" stroke="#c9a84c" stroke-width="1"/>
+    </svg>
+  </div>
+
+  <div class="footer-logo">Soul Threshold</div>
+  <div class="footer-tagline">Intuitive Mentoring for Grief, Fear &amp; Breaking Cycles</div>
+
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/work-with-me.html">Work With Me</a></li>
+    <li><a href="/blog.html">Blog</a></li>
+    <li><a href="/apply.html">Apply</a></li>
+  </ul>
+
+  <div class="gold-rule-sm" style="margin-bottom:20px;"></div>
+
+  <p class="footer-copy">&copy; 2025 Soul Threshold &middot; All rights reserved</p>
+  <p style="font-size:0.75rem; color:rgba(201,168,76,0.2); margin-top:6px; font-style:italic;">
+    debi.mentoring@gmail.com
+  </p>
+
+  <div style="margin-top:36px; display:flex; align-items:center; justify-content:center; gap:8px;">
+    <span style="font-family:'EB Garamond', serif; font-size:0.8rem; color:rgba(201,168,76,0.45); font-style:italic; letter-spacing:0.05em;">a</span>
+    <a href="https://meridian.website" target="_blank" rel="noopener" title="A Meridian Website" style="display:inline-flex; align-items:center; text-decoration:none;">
+      <span style="font-family:'Cinzel', serif; font-weight:500; font-size:0.85rem; color:rgba(201,168,76,0.55); letter-spacing:0.12em; text-transform:uppercase;">Meridian</span>
+    </a>
+    <span style="font-family:'EB Garamond', serif; font-size:0.8rem; color:rgba(201,168,76,0.45); font-style:italic; letter-spacing:0.05em;">website</span>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js"></script>
+</body>
+</html>

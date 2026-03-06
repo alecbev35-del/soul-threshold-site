@@ -1046,6 +1046,62 @@ footer {
   40% { transform: scale(1); opacity: 1; }
 }
 
+/* ─── SANCTUARY NOTES PLACEHOLDER ─────────────────────────────────── */
+.sanctuary-notes-placeholder {
+  text-align: center;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 80px 40px;
+}
+
+.sanctuary-notes-placeholder p {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--gold-dim);
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+}
+
+/* ─── CONTEXT BLOCK ───────────────────────────────────────────────── */
+.context-block {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.context-block p {
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: var(--text-body);
+  margin-bottom: 1.2em;
+}
+
+.context-block p:last-child {
+  margin-bottom: 0;
+}
+
+/* ─── CARD TRANSITION TEXT ────────────────────────────────────────── */
+.card-transition-text {
+  text-align: center;
+  margin: 36px auto 0;
+  max-width: 480px;
+}
+
+.card-transition-text p {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--gold-dim);
+  letter-spacing: 0.02em;
+}
+
+/* ─── HERO CTA ────────────────────────────────────────────────────── */
+.hero-cta {
+  padding: 18px 52px;
+  font-size: 0.85rem;
+}
+
 /* ─── MOBILE ───────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   nav { padding: 16px 24px; }
@@ -1071,9 +1127,63 @@ footer {
   .app-form { padding: 36px 24px 32px; }
   .process-steps { flex-direction: column; gap: 20px; }
   .process-step:not(:last-child)::after { display: none; }
+
+  /* Mobile buttons — generous tap targets */
+  .btn-primary {
+    padding: 18px 36px;
+    font-size: 0.82rem;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-secondary {
+    padding: 16px 32px;
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-cta {
+    padding: 20px 40px;
+    font-size: 0.85rem;
+  }
+
+  /* Form spacing — calm, spacious */
+  .form-group {
+    margin-bottom: 28px;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 16px 18px;
+    font-size: 1.05rem;
+    min-height: 48px;
+  }
+  .form-section-title {
+    margin: 40px 0 24px;
+  }
+  .form-consent {
+    padding: 24px;
+  }
+
+  /* Sanctuary notes placeholder */
+  .sanctuary-notes-placeholder {
+    padding: 60px 24px;
+  }
 }
 
 @media (max-width: 480px) {
-  h1 { font-size: 1.6rem; }
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
   .hero-moon-sun img { width: 130px; height: 130px; }
+  .hero-sub { font-size: 1.05rem; }
+  .style-block { padding: 28px 22px; }
+  .signup-section { padding: 48px 24px; }
+}
+
+@media (max-width: 414px) {
+  h1 { font-size: 1.4rem; word-spacing: 0.05em; }
+  h2 { font-size: 1.15rem; word-spacing: 0.05em; }
+  .signup-section h3 { font-size: 1.15rem; }
 }

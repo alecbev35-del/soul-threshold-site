@@ -16,18 +16,18 @@ document.addEventListener('DOMContentLoaded', () => {
     initApplicationForm();
   }
 
-  // Blog: show either listing or single post
-  const postSlug = new URLSearchParams(window.location.search).get('post');
-  if (postSlug && document.getElementById('blog-post-content')) {
-    // Single post view — hide grid, show post
-    const grid = document.getElementById('blog-grid');
-    if (grid) grid.style.display = 'none';
-    initBlogPost();
-  } else if (document.getElementById('blog-grid')) {
-    // Blog listing — hide post container
-    const postEl = document.getElementById('blog-post-content');
-    if (postEl) postEl.style.display = 'none';
-    initBlog();
+  // Sanctuary Notes: show either archive or single note
+  const noteSlug = new URLSearchParams(window.location.search).get('post');
+  if (noteSlug && document.getElementById('note-content')) {
+    const archive = document.getElementById('notes-archive');
+    const header = document.getElementById('notes-header');
+    if (archive) archive.style.display = 'none';
+    if (header) header.style.display = 'none';
+    initSingleNote();
+  } else if (document.getElementById('notes-archive')) {
+    const noteEl = document.getElementById('note-content');
+    if (noteEl) noteEl.style.display = 'none';
+    initNotesArchive();
   }
   // Range slider display
   const rangeInput = document.getElementById('action-scale');
@@ -232,7 +232,7 @@ function initApplicationForm() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   BLOG SYSTEM
+   SANCTUARY NOTES SYSTEM
    ═══════════════════════════════════════════════════════════════════════ */
 
 /* ---------- Frontmatter Parser ---------- */
@@ -260,31 +260,23 @@ function parseFrontmatter(content) {
 function markdownToHtml(md) {
   let html = md;
 
-  // Headers
   html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
   html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
   html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
 
-  // Bold and italic
   html = html.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
   html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
 
-  // Links
   html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
-
-  // Images
   html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
 
-  // Blockquotes
   html = html.replace(/^> (.*$)/gm, '<blockquote>$1</blockquote>');
   html = html.replace(/<\/blockquote>\n<blockquote>/g, '\n');
 
-  // Unordered lists
   html = html.replace(/^\- (.*$)/gm, '<li>$1</li>');
   html = html.replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>');
 
-  // Paragraphs
   html = html.split('\n\n').map(block => {
     block = block.trim();
     if (!block) return '';
@@ -295,147 +287,144 @@ function markdownToHtml(md) {
     return `<p>${block}</p>`;
   }).join('\n');
 
-  // Line breaks within paragraphs
   html = html.replace(/(?<!\n)\n(?!\n)/g, '<br>');
 
   return html;
 }
 
-/* ---------- Fetch Blog Index ---------- */
-async function fetchBlogIndex() {
-  try {
-    const response = await fetch('/content/blog/index.json');
-    if (!response.ok) return [];
-    const data = await response.json();
-    return data.posts || [];
-  } catch {
-    return fetchBlogPostsFallback();
-  }
-}
+/* ---------- Section Config ---------- */
+const SECTIONS = [
+  { key: 'the-stirring', label: 'The Stirring' },
+  { key: 'the-descent', label: 'The Descent' },
+  { key: 'the-return', label: 'The Return' }
+];
 
-async function fetchBlogPostsFallback() {
-  const knownPosts = [];
+/* ---------- Fetch Notes ---------- */
+async function fetchNotes() {
+  let notes = [];
+
   try {
-    const response = await fetch('/content/blog/');
-    if (response.ok) {
-      const text = await response.text();
-      const matches = text.match(/href="([^"]+\.md)"/g);
-      if (matches) {
-        return matches.map(m => m.match(/href="([^"]+)"/)[1]);
-      }
+    const res = await fetch('/content/blog/index.json');
+    if (res.ok) {
+      const data = await res.json();
+      notes = data.posts || [];
     }
   } catch {}
 
-  const sampleFiles = ['crossing-the-threshold.md'];
-  for (const file of sampleFiles) {
-    try {
-      const response = await fetch(`/content/blog/${file}`);
-      if (response.ok) knownPosts.push(file);
-    } catch {}
+  if (!notes.length) {
+    const knownFiles = ['crossing-the-threshold.md'];
+    for (const file of knownFiles) {
+      try {
+        const res = await fetch(`/content/blog/${file}`);
+        if (res.ok) {
+          const content = await res.text();
+          const { meta } = parseFrontmatter(content);
+          notes.push({ ...meta, slug: file.replace('.md', ''), file });
+        }
+      } catch {}
+    }
   }
-  return knownPosts;
+
+  return notes;
 }
 
-/* ---------- Blog Listing ---------- */
-async function initBlog() {
-  const grid = document.getElementById('blog-grid');
-  if (!grid) return;
+/* ---------- Notes Archive Listing ---------- */
+async function initNotesArchive() {
+  const archive = document.getElementById('notes-archive');
+  if (!archive) return;
 
-  grid.innerHTML = '<div class="loading-indicator"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>';
+  archive.innerHTML = '<div class="loading-indicator"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>';
 
   try {
-    let posts = [];
-    try {
-      const indexResponse = await fetch('/content/blog/index.json');
-      if (indexResponse.ok) {
-        const data = await indexResponse.json();
-        posts = data.posts || [];
-      }
-    } catch {}
+    const notes = await fetchNotes();
 
-    if (!posts.length) {
-      const files = await fetchBlogPostsFallback();
-      for (const file of files) {
-        try {
-          const response = await fetch(`/content/blog/${file}`);
-          if (response.ok) {
-            const content = await response.text();
-            const { meta } = parseFrontmatter(content);
-            const slug = file.replace('.md', '');
-            posts.push({ ...meta, slug, file });
-          }
-        } catch {}
-      }
-    }
-
-    posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-    if (!posts.length) {
-      grid.innerHTML = '<div class="blog-empty">No posts yet. New reflections coming soon.</div>';
+    if (!notes.length) {
+      archive.innerHTML = '<div class="notes-empty reveal">The first note is coming soon.</div>';
+      initScrollReveal();
       return;
     }
 
-    grid.innerHTML = '';
-    posts.forEach((post, i) => {
-      const date = post.date ? new Date(post.date).toLocaleDateString('en-US', {
-        year: 'numeric', month: 'long', day: 'numeric'
-      }) : '';
-
-      const slug = post.slug || post.file?.replace('.md', '') || '';
-
-      const card = document.createElement('article');
-      card.className = `blog-card reveal`;
-      card.innerHTML = `
-        ${date ? `<div class="post-date">${date}</div>` : ''}
-        <h2><a href="/blog.html?post=${slug}">${post.title || 'Untitled'}</a></h2>
-        ${post.excerpt ? `<p class="excerpt">${post.excerpt}</p>` : ''}
-        <a href="/blog.html?post=${slug}" class="read-more">Read more →</a>
-      `;
-      grid.appendChild(card);
+    const grouped = {};
+    notes.forEach(note => {
+      const sec = note.section || 'uncategorized';
+      if (!grouped[sec]) grouped[sec] = [];
+      grouped[sec].push(note);
     });
 
-    // Re-initialize scroll reveal for new elements
+    // Sort within each section by note_number ascending
+    Object.keys(grouped).forEach(key => {
+      grouped[key].sort((a, b) => (a.note_number || '').localeCompare(b.note_number || ''));
+    });
+
+    let html = '';
+    SECTIONS.forEach(({ key, label }) => {
+      const sectionNotes = grouped[key];
+      if (!sectionNotes || !sectionNotes.length) return;
+
+      html += `<div class="archive-section reveal">`;
+      html += `<h3 class="archive-section-heading">${label}</h3>`;
+      html += `<div class="archive-entries">`;
+
+      sectionNotes.forEach(note => {
+        const slug = note.slug || note.file?.replace('.md', '') || '';
+        const num = note.note_number || '???';
+        html += `<a href="/blog.html?post=${slug}" class="archive-entry">${num} — ${note.title || 'Untitled'}</a>`;
+      });
+
+      html += `</div></div>`;
+    });
+
+    archive.innerHTML = html;
     initScrollReveal();
-  } catch (error) {
-    grid.innerHTML = '<div class="blog-empty">No posts yet. New reflections coming soon.</div>';
+  } catch {
+    archive.innerHTML = '<div class="notes-empty reveal">The first note is coming soon.</div>';
+    initScrollReveal();
   }
 }
 
-/* ---------- Single Blog Post ---------- */
-async function initBlogPost() {
-  const container = document.getElementById('blog-post-content');
+/* ---------- Single Note View ---------- */
+async function initSingleNote() {
+  const container = document.getElementById('note-content');
   if (!container) return;
 
-  const params = new URLSearchParams(window.location.search);
-  const slug = params.get('post');
+  const slug = new URLSearchParams(window.location.search).get('post');
   if (!slug) return;
 
   container.innerHTML = '<div class="loading-indicator"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>';
 
   try {
     const response = await fetch(`/content/blog/${slug}.md`);
-    if (!response.ok) throw new Error('Post not found');
+    if (!response.ok) throw new Error('Note not found');
 
     const content = await response.text();
     const { meta, body } = parseFrontmatter(content);
 
+    const num = meta.note_number || '';
+    const title = meta.title || 'Untitled';
     const date = meta.date ? new Date(meta.date).toLocaleDateString('en-US', {
-      year: 'numeric', month: 'long', day: 'numeric'
+      year: 'numeric', month: 'long'
     }) : '';
+    const closingLine = meta.closing_line || '';
 
-    document.title = `${meta.title || 'Post'} — Soul Threshold`;
+    document.title = `${title} — Soul Threshold`;
 
     container.innerHTML = `
-      ${date ? `<div class="post-date">${date}</div>` : ''}
-      <h1>${meta.title || 'Untitled'}</h1>
-      <div class="post-body">${markdownToHtml(body)}</div>
-      <a href="/blog.html" class="back-to-blog">← Back to Blog</a>
+      <div class="note-header reveal">
+        ${num ? `<div class="note-number">Sanctuary Note ${num}</div>` : ''}
+        <h1>${title}</h1>
+        ${date ? `<div class="note-date">${date}</div>` : ''}
+      </div>
+      <div class="note-body reveal">${markdownToHtml(body)}</div>
+      ${closingLine ? `<div class="note-closing reveal"><p>${closingLine}</p></div>` : ''}
+      <a href="/blog.html" class="back-to-notes reveal">← Back to Sanctuary Notes</a>
     `;
+
+    initScrollReveal();
   } catch {
     container.innerHTML = `
-      <h1>Post not found</h1>
-      <p>This post may have been moved or removed.</p>
-      <a href="/blog.html" class="back-to-blog">← Back to Blog</a>
+      <div class="note-header"><h1>Note not found</h1></div>
+      <p style="text-align:center; color:var(--text-body);">This note may have been moved or removed.</p>
+      <a href="/blog.html" class="back-to-notes">← Back to Sanctuary Notes</a>
     `;
   }
 }

@@ -7,15 +7,39 @@ public_folder: "/assets/images/uploads"
 
 collections:
   - name: "blog"
-    label: "Blog Posts"
+    label: "Sanctuary Notes"
     folder: "content/blog"
     create: true
-    slug: "{{slug}}"
+    slug: "{{fields.note_number}}-{{slug}}"
     extension: "md"
     format: "frontmatter"
+    sortable_fields: ["note_number", "date", "title"]
     fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "datetime" }
-      - { label: "Excerpt", name: "excerpt", widget: "text", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - label: "Note Number"
+        name: "note_number"
+        widget: "string"
+        hint: "Three-digit number, e.g. 001, 002, 003"
+      - label: "Title"
+        name: "title"
+        widget: "string"
+        hint: "Keep it short — 3 to 6 words. Example: The Sand Beneath Our Feet"
+      - label: "Section"
+        name: "section"
+        widget: "select"
+        options:
+          - { label: "The Stirring — awakening begins", value: "the-stirring" }
+          - { label: "The Descent — transformation and confronting illusion", value: "the-descent" }
+          - { label: "The Return — integration and quiet wisdom", value: "the-return" }
+      - label: "Date"
+        name: "date"
+        widget: "datetime"
+        required: false
+        hint: "Optional. Will appear quietly beneath the note number if included."
+      - label: "Body"
+        name: "body"
+        widget: "markdown"
+      - label: "Closing Line"
+        name: "closing_line"
+        widget: "string"
+        hint: "A short final sentence that echoes the insight. Example: Life does not disappear. It simply changes its form."
 

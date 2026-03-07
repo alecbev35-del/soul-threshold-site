@@ -70,14 +70,18 @@
   <section class="section blog-section" style="padding-top: 160px;">
     <div class="container">
 
-      <p class="section-eyebrow reveal">Reflections</p>
-      <h2 class="reveal">Sanctuary Notes</h2>
-      <div class="gold-rule-sm" style="margin-top:16px; margin-bottom:48px;"></div>
-
-      <!-- Sanctuary Notes placeholder -->
-      <div class="sanctuary-notes-placeholder reveal">
-        <p>Short reflections for people crossing thresholds — coming soon.</p>
+      <div id="notes-header">
+        <p class="section-eyebrow reveal">Reflections</p>
+        <h2 class="reveal">Sanctuary Notes</h2>
+        <div class="gold-rule-sm" style="margin-top:16px; margin-bottom:12px;"></div>
+        <p class="notes-subtitle reveal">Short reflections for people crossing thresholds.</p>
       </div>
+
+      <!-- Archive listing (populated by JS) -->
+      <div id="notes-archive" class="notes-archive"></div>
+
+      <!-- Single note view (populated by JS) -->
+      <div id="note-content" class="note-content"></div>
 
     </div>
   </section>

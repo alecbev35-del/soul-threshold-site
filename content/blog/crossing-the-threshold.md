@@ -1,7 +1,9 @@
 ---
+note_number: "001"
 title: "Crossing the Threshold"
+section: "the-stirring"
 date: "2025-01-15"
-excerpt: "You don't cross a threshold because you're ready. You cross it because staying where you are has become more painful than the unknown."
+closing_line: "You don't have to be ready. You just have to be willing."
 ---
 
 You don't cross a threshold because you're ready. You cross it because staying where you are has become more painful than the unknown.

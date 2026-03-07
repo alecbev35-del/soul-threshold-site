@@ -1046,21 +1046,169 @@ footer {
   40% { transform: scale(1); opacity: 1; }
 }
 
-/* ─── SANCTUARY NOTES PLACEHOLDER ─────────────────────────────────── */
-.sanctuary-notes-placeholder {
+/* ─── SANCTUARY NOTES ─────────────────────────────────────────────── */
+.notes-subtitle {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--gold-dim);
   text-align: center;
-  max-width: 520px;
-  margin: 0 auto;
-  padding: 80px 40px;
+  margin-bottom: 48px;
 }
 
-.sanctuary-notes-placeholder p {
+.notes-archive {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.notes-empty {
+  text-align: center;
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--gold-dim);
+  padding: 60px 0;
+}
+
+.archive-section {
+  margin-bottom: 48px;
+}
+
+.archive-section-heading {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(201,169,110,0.6);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+}
+
+.archive-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.archive-entry {
+  display: block;
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.1rem;
+  color: var(--text-body);
+  text-decoration: none;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(201,168,76,0.06);
+  transition: color 0.25s ease, padding-left 0.25s ease;
+}
+
+.archive-entry:hover {
+  color: var(--gold-light);
+  padding-left: 8px;
+}
+
+/* ─── SINGLE NOTE VIEW ────────────────────────────────────────────── */
+.note-content {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.note-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.note-number {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin-bottom: 16px;
+}
+
+.note-header h1 {
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  color: var(--gold-pale);
+  margin-bottom: 12px;
+}
+
+.note-date {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--gold-dim);
+  opacity: 0.7;
+}
+
+.note-body {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: var(--text-body);
+}
+
+.note-body h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  color: var(--gold-light);
+  margin: 2.5em 0 1em;
+}
+
+.note-body p {
+  margin-bottom: 1.4em;
+}
+
+.note-body ul {
+  margin: 1.2em 0;
+  padding-left: 1.5em;
+}
+
+.note-body li {
+  margin-bottom: 0.6em;
+}
+
+.note-body blockquote {
+  border-left: 2px solid var(--gold-dim);
+  padding-left: 1.2em;
+  margin: 1.5em 0;
+  font-style: italic;
+  color: var(--gold-dim);
+}
+
+.note-closing {
+  text-align: center;
+  margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(201,168,76,0.12);
+}
+
+.note-closing p {
   font-family: 'EB Garamond', Georgia, serif;
   font-size: 1.15rem;
   font-style: italic;
+  color: var(--gold-light);
+  line-height: 1.8;
+}
+
+.back-to-notes {
+  display: inline-block;
+  margin-top: 48px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
   color: var(--gold-dim);
-  line-height: 1.85;
-  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.back-to-notes:hover {
+  color: var(--gold-light);
 }
 
 /* ─── CONTEXT BLOCK ───────────────────────────────────────────────── */
@@ -1167,9 +1315,10 @@ footer {
     padding: 24px;
   }
 
-  /* Sanctuary notes placeholder */
-  .sanctuary-notes-placeholder {
-    padding: 60px 24px;
+  /* Sanctuary notes archive */
+  .archive-entry {
+    font-size: 1.05rem;
+    padding: 12px 0;
   }
 }
 

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How-To Guide — Soul Threshold</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0a0e2a;
+      --navy-light: #111640;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-pale: #f5e6b8;
+      --gold-dim: #8a6d2f;
+      --text-body: #d4c5a9;
+    }
+
+    body {
+      background: var(--navy);
+      color: var(--text-body);
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 1.1rem;
+      line-height: 1.75;
+      min-height: 100vh;
+    }
+
+    .guide-wrapper {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 28px 80px;
+    }
+
+    /* Header */
+    .guide-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+    .guide-header img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: contain;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 16px rgba(201,168,76,0.35));
+    }
+    .guide-header h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.4rem;
+      color: var(--gold-pale);
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+    .guide-header p {
+      color: var(--gold-dim);
+      font-style: italic;
+      font-size: 1rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      color: var(--gold);
+      text-decoration: none;
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 36px;
+      transition: color 0.3s;
+    }
+    .back-link:hover { color: var(--gold-light); }
+
+    /* Gold rule */
+    .gold-rule {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent);
+      margin: 40px 0;
+    }
+
+    /* Sections */
+    .guide-section {
+      margin-bottom: 48px;
+    }
+    .guide-section h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      color: var(--gold-light);
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+    }
+
+    /* Steps */
+    .steps {
+      list-style: none;
+      counter-reset: step;
+    }
+    .steps li {
+      counter-increment: step;
+      position: relative;
+      padding-left: 48px;
+      margin-bottom: 20px;
+      min-height: 32px;
+    }
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 2px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.25);
+      color: var(--gold);
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+
+    /* Highlight boxes */
+    .highlight {
+      background: rgba(201,168,76,0.06);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 1rem;
+    }
+    .highlight strong {
+      color: var(--gold-light);
+    }
+
+    /* Tip boxes */
+    .tip {
+      background: rgba(39,174,96,0.06);
+      border: 1px solid rgba(39,174,96,0.2);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 0.95rem;
+      color: #8ecaa6;
+    }
+    .tip strong {
+      color: #6ece95;
+    }
+
+    /* Field reference */
+    .field-list {
+      list-style: none;
+    }
+    .field-list li {
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+    }
+    .field-list li:last-child { border-bottom: none; }
+    .field-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .field-desc {
+      font-size: 1rem;
+      color: var(--text-body);
+    }
+
+    /* Footer */
+    .guide-footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(201,168,76,0.1);
+    }
+    .guide-footer p {
+      color: var(--gold-dim);
+      font-style: italic;
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+    .guide-footer a {
+      color: var(--gold);
+      text-decoration: none;
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+    }
+    .guide-footer a:hover { color: var(--gold-light); }
+
+    @media (max-width: 600px) {
+      .guide-wrapper { padding: 32px 18px 60px; }
+      .guide-header h1 { font-size: 1.2rem; }
+      .steps li { padding-left: 42px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="guide-wrapper">
+
+  <a href="/manage/" class="back-link">&larr; Back to the Editor</a>
+
+  <div class="guide-header">
+    <img src="/assets/images/logo.png" alt="Soul Threshold" />
+    <h1>Your Guide to Sanctuary Notes</h1>
+    <p>This page will always be here for you. Bookmark it so you can find it anytime.</p>
+  </div>
+
+  <div class="gold-rule"></div>
+
+  <!-- ── HOW TO LOG IN ─────────────────────────────────── -->
+  <div class="guide-section">
+    <h2>How to Log In</h2>
+    <ol class="steps">
+      <li>Open your web browser and go to <strong>soulthreshold.com/manage/</strong></li>
+      <li>Click the <strong>Log In</strong> button in the center of the page.</li>
+      <li>A small window will appear. Enter your email address and password, then click <strong>Log in</strong>.</li>
+      <li>Once you're logged in, you'll see your list of Sanctuary Notes.</li>
+    </ol>
+
+    <div class="tip">
+      <strong>Forgot your password?</strong> On the login window, click "Forgot password?" and enter your email (debi.soulthreshold@gmail.com). You'll get a link to reset it.
+    </div>
+
+    <div class="tip">
+      <strong>Login button not showing up?</strong> Try refreshing the page. If that doesn't work, try using Google Chrome — it works the most reliably.
+    </div>
+  </div>
+
+  <div class="gold-rule"></div>
+
+  <!-- ── HOW TO WRITE A NEW NOTE ───────────────────────── -->
+  <div class="guide-section">
+    <h2>How to Write a New Note</h2>
+    <ol class="steps">
+      <li>From your notes list, click the <strong>+ Write a New Note</strong> button at the top.</li>
+      <li>The <strong>Note Number</strong> and <strong>Date</strong> will be filled in for you automatically. You can change them if you want.</li>
+      <li>Type a <strong>Title</strong> — keep it short and poetic, 3 to 6 words.</li>
+      <li>Choose which <strong>Section</strong> this note belongs to. If you're not sure, "The Stirring" is a great starting place.</li>
+      <li>Write your reflection in the <strong>Your Reflection</strong> box. Just write naturally. You can use the small buttons above the box to make text <strong>bold</strong> or <em>italic</em> if you want, but you don't have to.</li>
+      <li>If you'd like, add a <strong>Closing Line</strong> — a quiet sentence that echoes the heart of your note. This is optional.</li>
+      <li>Click <strong>Save & Publish</strong> at the bottom.</li>
+      <li>You'll see a message that says "Your note is live!" — and it is. It's on your website now.</li>
+    </ol>
+
+    <div class="highlight">
+      <strong>Good to know:</strong> After you save, it may take a minute or two for the note to show up on your actual website. This is normal — your site is rebuilding in the background.
+    </div>
+  </div>
+
+  <div class="gold-rule"></div>
+
+  <!-- ── HOW TO EDIT A NOTE ────────────────────────────── -->
+  <div class="guide-section">
+    <h2>How to Edit a Note</h2>
+    <ol class="steps">
+      <li>From your notes list, find the note you want to change.</li>
+      <li>Click the <strong>Edit</strong> button next to it.</li>
+      <li>Make your changes — fix a word, add a sentence, whatever you need.</li>
+      <li>Click <strong>Save & Publish</strong> to save your changes.</li>
+    </ol>
+
+    <div class="tip">
+      <strong>Don't worry about breaking anything.</strong> You can always edit again if something doesn't look right.
+    </div>
+  </div>
+
+  <div class="gold-rule"></div>
+
+  <!-- ── HOW TO DELETE A NOTE ──────────────────────────── -->
+  <div class="guide-section">
+    <h2>How to Delete a Note</h2>
+    <ol class="steps">
+      <li>From your notes list, find the note you want to remove.</li>
+      <li>Click the <strong>Delete</strong> button next to it.</li>
+      <li>A window will ask if you're sure. Click <strong>Yes, Delete</strong> to confirm, or <strong>Never Mind</strong> to cancel.</li>
+    </ol>
+
+    <div class="highlight">
+      <strong>Be careful:</strong> Once a note is deleted, it can't be brought back. If you're unsure, it might be better to edit it instead.
+    </div>
+  </div>
+
+  <div class="gold-rule"></div>
+
+  <!-- ── WHAT EACH FIELD MEANS ─────────────────────────── -->
+  <div class="guide-section">
+    <h2>What Each Field Means</h2>
+    <ul class="field-list">
+      <li>
+        <span class="field-name">Note Number</span>
+        <span class="field-desc">A three-digit number for this note: 001, 002, 003, and so on. This is filled in automatically — it's just one higher than your last note.</span>
+      </li>
+      <li>
+        <span class="field-name">Title</span>
+        <span class="field-desc">A short, poetic title for the note. Aim for 3 to 6 words. For example: "The Sand Beneath Our Feet" or "What the Body Remembers."</span>
+      </li>
+      <li>
+        <span class="field-name">Section</span>
+        <span class="field-desc">Which part of the journey this note belongs to. There are three sections: <em>The Stirring</em> (awakening begins), <em>The Descent</em> (confronting illusion), and <em>The Return</em> (quiet wisdom).</span>
+      </li>
+      <li>
+        <span class="field-name">Date</span>
+        <span class="field-desc">The date for this note. Today's date is filled in automatically. You can change it or leave it as is.</span>
+      </li>
+      <li>
+        <span class="field-name">Your Reflection</span>
+        <span class="field-desc">The main body of your note. Just write naturally. You can use the small buttons above the box for bold, italic, headings, or quotes — but plain text is perfectly fine too.</span>
+      </li>
+      <li>
+        <span class="field-name">Closing Line</span>
+        <span class="field-desc">A quiet final sentence that echoes the heart of the note. This is optional. For example: "Life does not disappear. It simply changes its form."</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="gold-rule"></div>
+
+  <!-- ── TROUBLESHOOTING ───────────────────────────────── -->
+  <div class="guide-section">
+    <h2>If Something Goes Wrong</h2>
+    <ul class="field-list">
+      <li>
+        <span class="field-name">The page won't load</span>
+        <span class="field-desc">Try refreshing your browser. If that doesn't help, try Google Chrome.</span>
+      </li>
+      <li>
+        <span class="field-name">I can't log in</span>
+        <span class="field-desc">Make sure you're using the right email address. Try "Forgot password?" to reset it. If that doesn't work, ask Alec for help.</span>
+      </li>
+      <li>
+        <span class="field-name">My note didn't show up on the site</span>
+        <span class="field-desc">After saving, it can take a minute or two for your site to rebuild. Try refreshing the site after a couple of minutes.</span>
+      </li>
+      <li>
+        <span class="field-name">I got an error while saving</span>
+        <span class="field-desc">Try clicking "Save & Publish" again. If the error keeps happening, try logging out and back in, then try again.</span>
+      </li>
+      <li>
+        <span class="field-name">Something else is wrong</span>
+        <span class="field-desc">Don't worry — you can't break the site by accident. Reach out to Alec and he'll sort it out.</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Footer -->
+  <div class="guide-footer">
+    <p>You're doing great. Technology is just a tool — your words are what matter.</p>
+    <a href="/manage/">&larr; Back to the Editor</a>
+  </div>
+
+</div>
+
+</body>
+</html>

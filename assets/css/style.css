@@ -885,6 +885,18 @@ footer {
   color: rgba(201,168,76,0.3);
 }
 
+.footer-admin { margin-top: 12px; }
+.footer-admin a {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.15);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.footer-admin a:hover { color: rgba(201,168,76,0.4); }
+
 /* ─── FLOATING PARTICLES ───────────────────────────────────────────── */
 .particle {
   position: fixed;

@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage — Soul Threshold</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet" />
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #0a0e2a;
+      --navy-light: #111640;
+      --navy-lighter: #1a1f52;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-pale: #f5e6b8;
+      --gold-dim: #8a6d2f;
+      --text-body: #d4c5a9;
+      --danger: #c0392b;
+      --danger-light: #e74c3c;
+      --success: #27ae60;
+    }
+
+    body {
+      background: var(--navy);
+      color: var(--text-body);
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Utilities ─────────────────────────────────────────── */
+    .hidden { display: none !important; }
+
+    /* ── App Shell ─────────────────────────────────────────── */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .app-header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .app-header-left img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: contain;
+    }
+    .app-header-left span {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1rem;
+      color: var(--gold-pale);
+      letter-spacing: 0.05em;
+    }
+    .app-header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .app-header-right a {
+      color: var(--gold-dim);
+      font-size: 0.85rem;
+      text-decoration: none;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.06em;
+    }
+    .app-header-right a:hover { color: var(--gold); }
+
+    .btn-logout {
+      background: none;
+      border: 1px solid rgba(201,168,76,0.25);
+      color: var(--gold-dim);
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-logout:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* ── Login Screen ──────────────────────────────────────── */
+    .login-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .login-screen img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: contain;
+      margin-bottom: 28px;
+      filter: drop-shadow(0 0 20px rgba(201,168,76,0.4));
+    }
+    .login-screen h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.6rem;
+      color: var(--gold-pale);
+      margin-bottom: 8px;
+      letter-spacing: 0.06em;
+    }
+    .login-screen .subtitle {
+      color: var(--gold-dim);
+      font-style: italic;
+      margin-bottom: 36px;
+      font-size: 1.05rem;
+    }
+    .btn-login {
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: none;
+      padding: 16px 48px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-height: 52px;
+    }
+    .btn-login:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+    }
+    .login-guide-link {
+      margin-top: 32px;
+      color: var(--gold-dim);
+      font-size: 0.9rem;
+    }
+    .login-guide-link a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+    .login-guide-link a:hover { text-decoration: underline; }
+
+    /* ── Content Area ──────────────────────────────────────── */
+    .content-area {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 32px 24px 80px;
+    }
+
+    /* ── Notes List ────────────────────────────────────────── */
+    .list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .list-header h2 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.3rem;
+      color: var(--gold-pale);
+      letter-spacing: 0.04em;
+    }
+
+    .btn-new {
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-height: 48px;
+    }
+    .btn-new:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+    }
+
+    .section-group {
+      margin-bottom: 36px;
+    }
+    .section-group-heading {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+      margin-bottom: 12px;
+    }
+
+    .note-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-radius: 6px;
+      transition: background 0.2s;
+      gap: 12px;
+    }
+    .note-item:hover {
+      background: rgba(201,168,76,0.06);
+    }
+    .note-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .note-item-number {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      color: var(--gold-dim);
+      letter-spacing: 0.1em;
+    }
+    .note-item-title {
+      color: var(--gold-pale);
+      font-size: 1.05rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .note-item-actions {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .btn-edit, .btn-delete {
+      background: none;
+      border: 1px solid rgba(201,168,76,0.2);
+      color: var(--gold-dim);
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .btn-edit:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .btn-delete:hover {
+      border-color: var(--danger-light);
+      color: var(--danger-light);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gold-dim);
+      font-style: italic;
+      font-size: 1.1rem;
+    }
+
+    /* ── Editor Form ───────────────────────────────────────── */
+    .editor-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .editor-header h2 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.2rem;
+      color: var(--gold-pale);
+    }
+    .btn-cancel {
+      background: none;
+      border: none;
+      color: var(--gold-dim);
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      padding: 8px 16px;
+      transition: color 0.3s;
+    }
+    .btn-cancel:hover { color: var(--gold); }
+
+    .form-group {
+      margin-bottom: 28px;
+    }
+    .form-group label {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .form-group .hint {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--gold-dim);
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="date"],
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(10,14,42,0.6);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 6px;
+      color: var(--gold-pale);
+      font-family: 'EB Garamond', serif;
+      font-size: 1.05rem;
+      padding: 14px 16px;
+      transition: border-color 0.3s;
+      line-height: 1.5;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px rgba(201,168,76,0.12);
+    }
+    .form-group select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23c9a84c' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+    .form-group select option {
+      background: var(--navy);
+      color: var(--gold-pale);
+    }
+    .form-group textarea {
+      min-height: 280px;
+      resize: vertical;
+    }
+
+    /* Markdown toolbar */
+    .md-toolbar {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .md-toolbar button {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.15);
+      color: var(--gold-dim);
+      font-family: 'EB Garamond', serif;
+      font-size: 0.9rem;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 36px;
+    }
+    .md-toolbar button:hover {
+      background: rgba(201,168,76,0.15);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .btn-save {
+      background: var(--gold);
+      color: var(--navy);
+      font-family: 'Cinzel', serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: none;
+      padding: 16px 48px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-height: 52px;
+      width: 100%;
+      margin-top: 12px;
+    }
+    .btn-save:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+    }
+    .btn-save:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* ── Preview Panel ─────────────────────────────────────── */
+    .preview-toggle {
+      text-align: right;
+      margin-bottom: 16px;
+    }
+    .preview-toggle button {
+      background: none;
+      border: 1px solid rgba(201,168,76,0.2);
+      color: var(--gold-dim);
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .preview-toggle button:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+    .preview-pane {
+      background: rgba(10,14,42,0.5);
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 8px;
+      padding: 32px 28px;
+      margin-bottom: 28px;
+      line-height: 1.85;
+    }
+    .preview-pane h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.6rem;
+      color: var(--gold-pale);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .preview-pane .preview-note-number {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .preview-pane .preview-date {
+      font-size: 0.85rem;
+      color: var(--gold-dim);
+      text-align: center;
+      font-style: italic;
+      margin-bottom: 28px;
+    }
+    .preview-pane .preview-body p { margin-bottom: 1.2em; }
+    .preview-pane .preview-body blockquote {
+      border-left: 2px solid var(--gold-dim);
+      padding-left: 1.2em;
+      margin: 1.5em 0;
+      font-style: italic;
+      color: var(--gold-dim);
+    }
+    .preview-pane .preview-body strong { color: var(--gold-light); }
+    .preview-pane .preview-closing {
+      text-align: center;
+      font-style: italic;
+      color: var(--gold-dim);
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(201,168,76,0.12);
+    }
+
+    /* ── Delete Modal ──────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5,7,20,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 24px;
+    }
+    .modal-box {
+      background: var(--navy-light);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 10px;
+      padding: 36px 32px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+    .modal-box h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      color: var(--gold-pale);
+      margin-bottom: 12px;
+    }
+    .modal-box p {
+      color: var(--text-body);
+      margin-bottom: 28px;
+      font-size: 1rem;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    .btn-confirm-delete {
+      background: var(--danger);
+      color: #fff;
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn-confirm-delete:hover { background: var(--danger-light); }
+    .btn-modal-cancel {
+      background: none;
+      border: 1px solid rgba(201,168,76,0.25);
+      color: var(--gold-dim);
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 12px 28px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-modal-cancel:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* ── Toast / Status Messages ───────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-family: 'EB Garamond', serif;
+      font-size: 1rem;
+      z-index: 2000;
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+      text-align: center;
+      max-width: 90%;
+    }
+    .toast.show { opacity: 1; }
+    .toast.success {
+      background: rgba(39,174,96,0.15);
+      border: 1px solid rgba(39,174,96,0.4);
+      color: #6ece95;
+    }
+    .toast.error {
+      background: rgba(192,57,43,0.15);
+      border: 1px solid rgba(192,57,43,0.4);
+      color: #e88;
+    }
+
+    /* ── Loading ────────────────────────────────────────────── */
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--gold-dim);
+      font-style: italic;
+    }
+    .spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 2px solid rgba(201,168,76,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Responsive ─────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .app-header { padding: 12px 16px; }
+      .content-area { padding: 24px 16px 60px; }
+      .list-header { flex-direction: column; align-items: stretch; }
+      .btn-new { text-align: center; }
+      .note-item { flex-direction: column; align-items: stretch; gap: 8px; }
+      .note-item-actions { justify-content: flex-end; }
+      .modal-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     LOGIN SCREEN
+════════════════════════════════════════════════════════════ -->
+<div id="login-screen" class="login-screen">
+  <img src="/assets/images/logo.png" alt="Soul Threshold" />
+  <h1>Soul Threshold</h1>
+  <p class="subtitle">Your writing space for Sanctuary Notes</p>
+  <button class="btn-login" onclick="netlifyIdentity.open()">Log In</button>
+  <p class="login-guide-link">
+    First time? <a href="/manage/guide.html">Open the step-by-step guide</a>
+  </p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     APP (hidden until logged in)
+════════════════════════════════════════════════════════════ -->
+<div id="app" class="hidden">
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="app-header-left">
+      <img src="/assets/images/logo.png" alt="Soul Threshold" />
+      <span>Soul Threshold</span>
+    </div>
+    <div class="app-header-right">
+      <a href="/manage/guide.html">Need Help?</a>
+      <a href="/" target="_blank">View Site</a>
+      <button class="btn-logout" onclick="doLogout()">Log Out</button>
+    </div>
+  </header>
+
+  <div class="content-area">
+
+    <!-- ── Notes List View ──────────────────────────────── -->
+    <div id="view-list">
+      <div class="list-header">
+        <h2>Your Sanctuary Notes</h2>
+        <button class="btn-new" onclick="showEditor()">+ Write a New Note</button>
+      </div>
+      <div id="notes-list">
+        <div class="loading"><div class="spinner"></div><br>Loading your notes...</div>
+      </div>
+    </div>
+
+    <!-- ── Editor View ──────────────────────────────────── -->
+    <div id="view-editor" class="hidden">
+      <div class="editor-header">
+        <h2 id="editor-title">New Sanctuary Note</h2>
+        <button class="btn-cancel" onclick="showList()">Cancel</button>
+      </div>
+
+      <form id="note-form" onsubmit="handleSave(event)">
+        <div class="form-group">
+          <label for="f-number">Note Number</label>
+          <span class="hint">Three digits: 001, 002, 003 — just one higher than your last note.</span>
+          <input type="text" id="f-number" maxlength="3" pattern="\d{3}" placeholder="001" required />
+        </div>
+
+        <div class="form-group">
+          <label for="f-title">Title</label>
+          <span class="hint">A short, poetic title. Aim for 3 to 6 words.</span>
+          <input type="text" id="f-title" placeholder="The Sand Beneath Our Feet" required />
+        </div>
+
+        <div class="form-group">
+          <label for="f-section">Section</label>
+          <span class="hint">Which part of the journey does this belong to? If unsure, "The Stirring" is a great starting place.</span>
+          <select id="f-section" required>
+            <option value="the-stirring">The Stirring — awakening begins</option>
+            <option value="the-descent">The Descent — confronting illusion</option>
+            <option value="the-return">The Return — quiet wisdom</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="f-date">Date</label>
+          <span class="hint">Today's date is filled in automatically. You can change it or leave it.</span>
+          <input type="date" id="f-date" />
+        </div>
+
+        <div class="form-group">
+          <label for="f-body">Your Reflection</label>
+          <span class="hint">Write naturally. Use the buttons above the text box for bold, italic, or headings if you want.</span>
+          <div class="md-toolbar">
+            <button type="button" onclick="mdWrap('**','**')" title="Bold"><strong>B</strong></button>
+            <button type="button" onclick="mdWrap('*','*')" title="Italic"><em>I</em></button>
+            <button type="button" onclick="mdPrefix('## ')" title="Heading">H</button>
+            <button type="button" onclick="mdPrefix('> ')" title="Quote">"</button>
+            <button type="button" onclick="mdPrefix('- ')" title="Bullet list">List</button>
+          </div>
+          <textarea id="f-body" placeholder="Start writing your reflection here..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="f-closing">Closing Line</label>
+          <span class="hint">A quiet final sentence that echoes the heart of this note. Optional.</span>
+          <input type="text" id="f-closing" placeholder="Life does not disappear. It simply changes its form." />
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-toggle">
+          <button type="button" onclick="togglePreview()">Show Preview</button>
+        </div>
+        <div id="preview-pane" class="preview-pane hidden"></div>
+
+        <button type="submit" class="btn-save" id="btn-save">Save & Publish</button>
+      </form>
+    </div>
+
+  </div><!-- /content-area -->
+</div><!-- /app -->
+
+<!-- ── Delete Confirmation Modal ──────────────────────── -->
+<div id="delete-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h3>Delete this note?</h3>
+    <p id="delete-modal-msg">Are you sure you want to delete this note? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn-confirm-delete" onclick="confirmDelete()">Yes, Delete</button>
+      <button class="btn-modal-cancel" onclick="closeDeleteModal()">Never Mind</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast ──────────────────────────────────────────── -->
+<div id="toast" class="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   SOUL THRESHOLD — Custom Admin Panel
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const API_BASE = '/.netlify/git/github/contents';
+const CONTENT_PATH = 'content/blog';
+const BRANCH = 'main';
+
+let allNotes = [];      // { meta, filename, sha, content }
+let editingNote = null;  // set when editing an existing note
+let deleteTarget = null; // { filename, sha, title }
+let indexSha = null;     // SHA of index.json
+
+const SECTIONS = [
+  { key: 'the-stirring', label: 'The Stirring' },
+  { key: 'the-descent', label: 'The Descent' },
+  { key: 'the-return', label: 'The Return' }
+];
+
+/* ── Auth ──────────────────────────────────────────────────────────── */
+
+async function getToken() {
+  const user = netlifyIdentity.currentUser();
+  if (!user) throw new Error('Not logged in');
+  // Refresh the token to ensure it's valid
+  const token = await user.jwt();
+  return token;
+}
+
+function initAuth() {
+  const user = netlifyIdentity.currentUser();
+  if (user) {
+    onLogin();
+  }
+
+  netlifyIdentity.on('login', () => {
+    onLogin();
+  });
+
+  netlifyIdentity.on('logout', () => {
+    document.getElementById('app').classList.add('hidden');
+    document.getElementById('login-screen').classList.remove('hidden');
+  });
+}
+
+function onLogin() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  loadNotes();
+}
+
+function doLogout() {
+  netlifyIdentity.logout();
+}
+
+/* ── API Helpers ───────────────────────────────────────────────────── */
+
+async function apiGet(path) {
+  const token = await getToken();
+  const res = await fetch(`${API_BASE}/${path}?ref=${BRANCH}`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  if (!res.ok) throw new Error(`API error: ${res.status}`);
+  return res.json();
+}
+
+async function apiPut(path, content, sha, message) {
+  const token = await getToken();
+  const body = {
+    message,
+    content: btoa(unescape(encodeURIComponent(content))),
+    branch: BRANCH
+  };
+  if (sha) body.sha = sha;
+
+  const res = await fetch(`${API_BASE}/${path}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Save failed: ${res.status} — ${err}`);
+  }
+  return res.json();
+}
+
+async function apiDelete(path, sha, message) {
+  const token = await getToken();
+  const res = await fetch(`${API_BASE}/${path}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ message, sha, branch: BRANCH })
+  });
+  if (!res.ok) throw new Error(`Delete failed: ${res.status}`);
+  return res.json();
+}
+
+/* ── Content Helpers ───────────────────────────────────────────────── */
+
+function parseFrontmatter(text) {
+  const match = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+  if (!match) return { meta: {}, body: text };
+
+  const meta = {};
+  match[1].split('\n').forEach(line => {
+    const i = line.indexOf(':');
+    if (i === -1) return;
+    const key = line.slice(0, i).trim();
+    let val = line.slice(i + 1).trim();
+    if ((val.startsWith('"') && val.endsWith('"')) ||
+        (val.startsWith("'") && val.endsWith("'"))) {
+      val = val.slice(1, -1);
+    }
+    meta[key] = val;
+  });
+
+  return { meta, body: match[2] };
+}
+
+function buildFrontmatter(data) {
+  let fm = '---\n';
+  fm += `note_number: "${data.note_number}"\n`;
+  fm += `title: "${data.title.replace(/"/g, '\\"')}"\n`;
+  fm += `section: "${data.section}"\n`;
+  if (data.date) fm += `date: "${data.date}"\n`;
+  if (data.closing_line) fm += `closing_line: "${data.closing_line.replace(/"/g, '\\"')}"\n`;
+  fm += '---\n\n';
+  fm += data.body;
+  return fm;
+}
+
+function slugify(text) {
+  return text.toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function markdownToHtml(md) {
+  let html = md;
+  html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  html = html.replace(/^> (.*$)/gm, '<blockquote>$1</blockquote>');
+  html = html.replace(/^\- (.*$)/gm, '<li>$1</li>');
+  html = html.replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>');
+  html = html.split('\n\n').map(block => {
+    block = block.trim();
+    if (!block) return '';
+    if (block.startsWith('<')) return block;
+    return `<p>${block}</p>`;
+  }).join('\n');
+  return html;
+}
+
+/* ── Load Notes ────────────────────────────────────────────────────── */
+
+async function loadNotes() {
+  const listEl = document.getElementById('notes-list');
+  listEl.innerHTML = '<div class="loading"><div class="spinner"></div><br>Loading your notes...</div>';
+
+  try {
+    const files = await apiGet(CONTENT_PATH);
+    allNotes = [];
+
+    for (const file of files) {
+      if (file.name === 'index.json') {
+        indexSha = file.sha;
+        continue;
+      }
+      if (!file.name.endsWith('.md')) continue;
+
+      // Fetch file content
+      const fileData = await apiGet(`${CONTENT_PATH}/${file.name}`);
+      const content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
+      const { meta, body } = parseFrontmatter(content);
+
+      allNotes.push({
+        meta,
+        body,
+        filename: file.name,
+        sha: fileData.sha,
+        content
+      });
+    }
+
+    // Sort by note_number
+    allNotes.sort((a, b) => (a.meta.note_number || '').localeCompare(b.meta.note_number || ''));
+    renderNotesList();
+
+  } catch (err) {
+    console.error('Failed to load notes:', err);
+    listEl.innerHTML = `<div class="empty-state">Something went wrong loading your notes.<br><br>Try refreshing the page. If it keeps happening, try logging out and back in.</div>`;
+  }
+}
+
+function renderNotesList() {
+  const listEl = document.getElementById('notes-list');
+
+  if (!allNotes.length) {
+    listEl.innerHTML = `<div class="empty-state">You haven't written any notes yet.<br><br>Click the button above to start writing.</div>`;
+    return;
+  }
+
+  // Group by section
+  const grouped = {};
+  allNotes.forEach(n => {
+    const sec = n.meta.section || 'uncategorized';
+    if (!grouped[sec]) grouped[sec] = [];
+    grouped[sec].push(n);
+  });
+
+  let html = '';
+  SECTIONS.forEach(({ key, label }) => {
+    const notes = grouped[key];
+    if (!notes || !notes.length) return;
+
+    html += `<div class="section-group">`;
+    html += `<div class="section-group-heading">${label}</div>`;
+
+    notes.forEach(n => {
+      const title = n.meta.title || 'Untitled';
+      const num = n.meta.note_number || '???';
+      html += `
+        <div class="note-item">
+          <div class="note-item-info">
+            <div class="note-item-number">${num}</div>
+            <div class="note-item-title">${escHtml(title)}</div>
+          </div>
+          <div class="note-item-actions">
+            <button class="btn-edit" onclick="editNote('${escAttr(n.filename)}')">Edit</button>
+            <button class="btn-delete" onclick="showDeleteModal('${escAttr(n.filename)}')">Delete</button>
+          </div>
+        </div>
+      `;
+    });
+
+    html += `</div>`;
+  });
+
+  listEl.innerHTML = html;
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+function escAttr(s) {
+  return s.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+/* ── View Switching ────────────────────────────────────────────────── */
+
+function showList() {
+  editingNote = null;
+  document.getElementById('view-editor').classList.add('hidden');
+  document.getElementById('view-list').classList.remove('hidden');
+  document.getElementById('preview-pane').classList.add('hidden');
+  window.scrollTo(0, 0);
+}
+
+function showEditor(note) {
+  editingNote = note || null;
+  document.getElementById('view-list').classList.add('hidden');
+  document.getElementById('view-editor').classList.remove('hidden');
+  document.getElementById('preview-pane').classList.add('hidden');
+
+  const form = document.getElementById('note-form');
+  const titleEl = document.getElementById('editor-title');
+
+  if (note) {
+    titleEl.textContent = 'Edit Sanctuary Note';
+    document.getElementById('f-number').value = note.meta.note_number || '';
+    document.getElementById('f-title').value = note.meta.title || '';
+    document.getElementById('f-section').value = note.meta.section || 'the-stirring';
+    document.getElementById('f-date').value = note.meta.date ? note.meta.date.slice(0, 10) : '';
+    document.getElementById('f-body').value = note.body || '';
+    document.getElementById('f-closing').value = note.meta.closing_line || '';
+  } else {
+    titleEl.textContent = 'New Sanctuary Note';
+    form.reset();
+    // Default date to today
+    const today = new Date().toISOString().slice(0, 10);
+    document.getElementById('f-date').value = today;
+    // Suggest next note number
+    suggestNextNumber();
+  }
+
+  document.getElementById('btn-save').disabled = false;
+  document.getElementById('btn-save').textContent = 'Save & Publish';
+  window.scrollTo(0, 0);
+}
+
+function suggestNextNumber() {
+  if (!allNotes.length) {
+    document.getElementById('f-number').value = '001';
+    return;
+  }
+  const maxNum = Math.max(...allNotes.map(n => parseInt(n.meta.note_number || '0', 10)));
+  const next = String(maxNum + 1).padStart(3, '0');
+  document.getElementById('f-number').value = next;
+}
+
+function editNote(filename) {
+  const note = allNotes.find(n => n.filename === filename);
+  if (note) showEditor(note);
+}
+
+/* ── Save Note ─────────────────────────────────────────────────────── */
+
+async function handleSave(e) {
+  e.preventDefault();
+
+  const btn = document.getElementById('btn-save');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  const data = {
+    note_number: document.getElementById('f-number').value.trim(),
+    title: document.getElementById('f-title').value.trim(),
+    section: document.getElementById('f-section').value,
+    date: document.getElementById('f-date').value,
+    closing_line: document.getElementById('f-closing').value.trim(),
+    body: document.getElementById('f-body').value
+  };
+
+  // Validate note number
+  if (!/^\d{3}$/.test(data.note_number)) {
+    showToast('Note number must be exactly three digits (like 001, 002, 003).', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Save & Publish';
+    return;
+  }
+
+  const slug = slugify(data.title);
+  const filename = `${data.note_number}-${slug}.md`;
+  const fileContent = buildFrontmatter(data);
+
+  try {
+    let sha = null;
+    let commitMsg = `Add sanctuary note: ${data.title}`;
+
+    if (editingNote) {
+      sha = editingNote.sha;
+      commitMsg = `Update sanctuary note: ${data.title}`;
+
+      // If filename changed (title or number changed), delete old file first
+      if (editingNote.filename !== filename) {
+        await apiDelete(`${CONTENT_PATH}/${editingNote.filename}`, editingNote.sha, `Rename note: ${editingNote.meta.title}`);
+        sha = null; // new file, no SHA
+      }
+    }
+
+    // Save the note file
+    const result = await apiPut(`${CONTENT_PATH}/${filename}`, fileContent, sha, commitMsg);
+
+    // Update index.json
+    await updateIndex(data, filename, editingNote?.filename);
+
+    showToast('Your note is live!', 'success');
+
+    // Reload and go back to list
+    await loadNotes();
+    showList();
+
+  } catch (err) {
+    console.error('Save error:', err);
+    showToast('Something went wrong saving your note. Please try again.', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Save & Publish';
+  }
+}
+
+async function updateIndex(noteData, newFilename, oldFilename) {
+  // Build the index from current allNotes + the new/updated note
+  let posts = allNotes
+    .filter(n => n.filename !== (oldFilename || newFilename))
+    .map(n => ({
+      note_number: n.meta.note_number,
+      title: n.meta.title,
+      section: n.meta.section,
+      date: n.meta.date || '',
+      closing_line: n.meta.closing_line || '',
+      slug: newFilename.replace('.md', '').replace(/^\d{3}-/, ''),
+      file: n.filename
+    }));
+
+  // Compute the slug from the new filename
+  const newSlug = newFilename.replace('.md', '').replace(/^\d{3}-/, '');
+
+  // Add the new/updated note
+  posts.push({
+    note_number: noteData.note_number,
+    title: noteData.title,
+    section: noteData.section,
+    date: noteData.date || '',
+    closing_line: noteData.closing_line || '',
+    slug: newSlug,
+    file: newFilename
+  });
+
+  // Sort by note_number
+  posts.sort((a, b) => (a.note_number || '').localeCompare(b.note_number || ''));
+
+  const indexContent = JSON.stringify({ posts }, null, 2) + '\n';
+
+  await apiPut(
+    `${CONTENT_PATH}/index.json`,
+    indexContent,
+    indexSha,
+    'Update notes index'
+  );
+}
+
+/* ── Delete Note ───────────────────────────────────────────────────── */
+
+function showDeleteModal(filename) {
+  const note = allNotes.find(n => n.filename === filename);
+  if (!note) return;
+
+  deleteTarget = { filename: note.filename, sha: note.sha, title: note.meta.title };
+  document.getElementById('delete-modal-msg').textContent =
+    `Are you sure you want to delete "${note.meta.title}"? This cannot be undone.`;
+  document.getElementById('delete-modal').classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+  deleteTarget = null;
+  document.getElementById('delete-modal').classList.add('hidden');
+}
+
+async function confirmDelete() {
+  if (!deleteTarget) return;
+
+  const { filename, sha, title } = deleteTarget;
+  closeDeleteModal();
+
+  try {
+    await apiDelete(`${CONTENT_PATH}/${filename}`, sha, `Delete sanctuary note: ${title}`);
+
+    // Update index.json
+    const posts = allNotes
+      .filter(n => n.filename !== filename)
+      .map(n => ({
+        note_number: n.meta.note_number,
+        title: n.meta.title,
+        section: n.meta.section,
+        date: n.meta.date || '',
+        closing_line: n.meta.closing_line || '',
+        slug: n.filename.replace('.md', '').replace(/^\d{3}-/, ''),
+        file: n.filename
+      }));
+
+    const indexContent = JSON.stringify({ posts }, null, 2) + '\n';
+    await apiPut(`${CONTENT_PATH}/index.json`, indexContent, indexSha, 'Update notes index');
+
+    showToast('Note deleted.', 'success');
+    await loadNotes();
+
+  } catch (err) {
+    console.error('Delete error:', err);
+    showToast('Something went wrong deleting that note. Please try again.', 'error');
+  }
+}
+
+/* ── Markdown Toolbar ──────────────────────────────────────────────── */
+
+function mdWrap(before, after) {
+  const ta = document.getElementById('f-body');
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  const text = ta.value;
+  const selected = text.slice(start, end);
+
+  ta.value = text.slice(0, start) + before + selected + after + text.slice(end);
+  ta.focus();
+  ta.setSelectionRange(start + before.length, end + before.length);
+}
+
+function mdPrefix(prefix) {
+  const ta = document.getElementById('f-body');
+  const start = ta.selectionStart;
+  const text = ta.value;
+
+  // Find start of current line
+  const lineStart = text.lastIndexOf('\n', start - 1) + 1;
+  ta.value = text.slice(0, lineStart) + prefix + text.slice(lineStart);
+  ta.focus();
+  ta.setSelectionRange(start + prefix.length, start + prefix.length);
+}
+
+/* ── Preview ───────────────────────────────────────────────────────── */
+
+function togglePreview() {
+  const pane = document.getElementById('preview-pane');
+  const isHidden = pane.classList.contains('hidden');
+
+  if (isHidden) {
+    updatePreview();
+    pane.classList.remove('hidden');
+  } else {
+    pane.classList.add('hidden');
+  }
+}
+
+function updatePreview() {
+  const num = document.getElementById('f-number').value.trim();
+  const title = document.getElementById('f-title').value.trim();
+  const date = document.getElementById('f-date').value;
+  const body = document.getElementById('f-body').value;
+  const closing = document.getElementById('f-closing').value.trim();
+
+  const dateStr = date ? new Date(date + 'T00:00:00').toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long'
+  }) : '';
+
+  const pane = document.getElementById('preview-pane');
+  pane.innerHTML = `
+    ${num ? `<div class="preview-note-number">Sanctuary Note ${escHtml(num)}</div>` : ''}
+    <h1>${escHtml(title || 'Untitled')}</h1>
+    ${dateStr ? `<div class="preview-date">${dateStr}</div>` : ''}
+    <div class="preview-body">${markdownToHtml(body)}</div>
+    ${closing ? `<div class="preview-closing">${escHtml(closing)}</div>` : ''}
+  `;
+}
+
+/* ── Toast ─────────────────────────────────────────────────────────── */
+
+function showToast(msg, type) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast ${type} show`;
+  setTimeout(() => { el.classList.remove('show'); }, 4000);
+}
+
+/* ── Init ──────────────────────────────────────────────────────────── */
+
+document.addEventListener('DOMContentLoaded', () => {
+  initAuth();
+});
+</script>
+
+</body>
+</html>

@@ -7,6 +7,7 @@ closing_line: "You don't have to be ready. You just have to be willing."
 ---
 
 
+
 You don't cross a threshold because you're ready. You cross it because staying where you are has become more painful than the unknown.
 
 Most people who come to me aren't looking for answers. They already know the answer. What they need is someone to say it plainly — and then help them figure out what to do next.

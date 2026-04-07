@@ -293,11 +293,25 @@ function markdownToHtml(md) {
 }
 
 /* ---------- Section Config ---------- */
-const SECTIONS = [
+const DEFAULT_SECTIONS = [
   { key: 'the-stirring', label: 'The Stirring' },
   { key: 'the-descent', label: 'The Descent' },
   { key: 'the-return', label: 'The Return' }
 ];
+
+function buildSectionList(notes) {
+  const sections = [...DEFAULT_SECTIONS];
+  const knownKeys = new Set(sections.map(s => s.key));
+  notes.forEach(note => {
+    const sec = note.section;
+    if (sec && !knownKeys.has(sec)) {
+      knownKeys.add(sec);
+      const label = sec.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      sections.push({ key: sec, label });
+    }
+  });
+  return sections;
+}
 
 /* ---------- Fetch Notes ---------- */
 async function fetchNotes() {
@@ -357,7 +371,7 @@ async function initNotesArchive() {
     });
 
     let html = '';
-    SECTIONS.forEach(({ key, label }) => {
+    buildSectionList(notes).forEach(({ key, label }) => {
       const sectionNotes = grouped[key];
       if (!sectionNotes || !sectionNotes.length) return;
 

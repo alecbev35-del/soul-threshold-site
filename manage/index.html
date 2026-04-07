@@ -688,12 +688,17 @@
 
         <div class="form-group">
           <label for="f-section">Section</label>
-          <span class="hint">Which part of the journey does this belong to? If unsure, "The Stirring" is a great starting place.</span>
+          <span class="hint">Choose an existing section, or create a new one.</span>
           <select id="f-section" required>
             <option value="the-stirring">The Stirring — awakening begins</option>
             <option value="the-descent">The Descent — confronting illusion</option>
             <option value="the-return">The Return — quiet wisdom</option>
+            <option value="__custom__">+ Create a new section...</option>
           </select>
+          <div id="custom-section-fields" class="hidden" style="margin-top:12px;">
+            <span class="hint">Give your new section a name (e.g. "The Unraveling").</span>
+            <input type="text" id="f-section-custom" placeholder="The Unraveling" />
+          </div>
         </div>
 
         <div class="form-group">
@@ -763,11 +768,39 @@ let editingNote = null;  // set when editing an existing note
 let deleteTarget = null; // { filename, sha, title }
 let indexSha = null;     // SHA of index.json
 
-const SECTIONS = [
+const DEFAULT_SECTIONS = [
   { key: 'the-stirring', label: 'The Stirring' },
   { key: 'the-descent', label: 'The Descent' },
   { key: 'the-return', label: 'The Return' }
 ];
+
+// Build full section list: defaults + any custom sections found in notes
+function getAllSections() {
+  const sections = [...DEFAULT_SECTIONS];
+  const knownKeys = new Set(sections.map(s => s.key));
+
+  allNotes.forEach(n => {
+    const sec = n.meta.section;
+    if (sec && !knownKeys.has(sec)) {
+      knownKeys.add(sec);
+      // Convert key back to label: "the-unraveling" → "The Unraveling"
+      const label = sec.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+      sections.push({ key: sec, label });
+    }
+  });
+
+  return sections;
+}
+
+function sectionKeyFromLabel(label) {
+  return label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+function sectionLabelFromKey(key) {
+  const found = getAllSections().find(s => s.key === key);
+  if (found) return found.label;
+  return key.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
 
 /* ── Auth ──────────────────────────────────────────────────────────── */
 
@@ -971,7 +1004,7 @@ function renderNotesList() {
   });
 
   let html = '';
-  SECTIONS.forEach(({ key, label }) => {
+  getAllSections().forEach(({ key, label }) => {
     const notes = grouped[key];
     if (!notes || !notes.length) return;
 
@@ -1029,17 +1062,22 @@ function showEditor(note) {
   const form = document.getElementById('note-form');
   const titleEl = document.getElementById('editor-title');
 
+  // Rebuild section dropdown with any custom sections from existing notes
+  rebuildSectionDropdown();
+
   if (note) {
     titleEl.textContent = 'Edit Sanctuary Note';
     document.getElementById('f-number').value = note.meta.note_number || '';
     document.getElementById('f-title').value = note.meta.title || '';
-    document.getElementById('f-section').value = note.meta.section || 'the-stirring';
+    setSectionDropdown(note.meta.section || 'the-stirring');
     document.getElementById('f-date').value = note.meta.date ? note.meta.date.slice(0, 10) : '';
     document.getElementById('f-body').value = note.body || '';
     document.getElementById('f-closing').value = note.meta.closing_line || '';
   } else {
     titleEl.textContent = 'New Sanctuary Note';
     form.reset();
+    // Rebuild again after reset to restore options
+    rebuildSectionDropdown();
     // Default date to today
     const today = new Date().toISOString().slice(0, 10);
     document.getElementById('f-date').value = today;
@@ -1067,6 +1105,56 @@ function editNote(filename) {
   if (note) showEditor(note);
 }
 
+/* ── Section Dropdown ──────────────────────────────────────────────── */
+
+function rebuildSectionDropdown() {
+  const select = document.getElementById('f-section');
+  const sections = getAllSections();
+
+  select.innerHTML = '';
+  sections.forEach(({ key, label }) => {
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = label;
+    select.appendChild(opt);
+  });
+  // Add "create new" option
+  const customOpt = document.createElement('option');
+  customOpt.value = '__custom__';
+  customOpt.textContent = '+ Create a new section...';
+  select.appendChild(customOpt);
+
+  // Hide custom field by default
+  document.getElementById('custom-section-fields').classList.add('hidden');
+  document.getElementById('f-section-custom').value = '';
+}
+
+function setSectionDropdown(sectionKey) {
+  const select = document.getElementById('f-section');
+  // Check if this section exists in the dropdown
+  const exists = Array.from(select.options).some(o => o.value === sectionKey);
+  if (exists) {
+    select.value = sectionKey;
+    document.getElementById('custom-section-fields').classList.add('hidden');
+  } else {
+    // Unknown section — select custom and pre-fill
+    select.value = '__custom__';
+    document.getElementById('custom-section-fields').classList.remove('hidden');
+    document.getElementById('f-section-custom').value = sectionLabelFromKey(sectionKey);
+  }
+}
+
+// Toggle custom section input visibility
+document.getElementById('f-section').addEventListener('change', function() {
+  const customFields = document.getElementById('custom-section-fields');
+  if (this.value === '__custom__') {
+    customFields.classList.remove('hidden');
+    document.getElementById('f-section-custom').focus();
+  } else {
+    customFields.classList.add('hidden');
+  }
+});
+
 /* ── Save Note ─────────────────────────────────────────────────────── */
 
 async function handleSave(e) {
@@ -1076,10 +1164,23 @@ async function handleSave(e) {
   btn.disabled = true;
   btn.textContent = 'Saving...';
 
+  // Resolve section: use custom field if "create new" was selected
+  let sectionValue = document.getElementById('f-section').value;
+  if (sectionValue === '__custom__') {
+    const customLabel = document.getElementById('f-section-custom').value.trim();
+    if (!customLabel) {
+      showToast('Please enter a name for your new section.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Save & Publish';
+      return;
+    }
+    sectionValue = sectionKeyFromLabel(customLabel);
+  }
+
   const data = {
     note_number: document.getElementById('f-number').value.trim(),
     title: document.getElementById('f-title').value.trim(),
-    section: document.getElementById('f-section').value,
+    section: sectionValue,
     date: document.getElementById('f-date').value,
     closing_line: document.getElementById('f-closing').value.trim(),
     body: document.getElementById('f-body').value

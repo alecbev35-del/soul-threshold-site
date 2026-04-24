@@ -724,6 +724,61 @@
       color: var(--gold-dim);
     }
 
+    /* ── Markdown Help Panel ───────────────────────────────── */
+    .md-help {
+      background: rgba(10,14,42,0.5);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+    .md-help-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+    .md-help ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .md-help li {
+      padding: 4px 0;
+      color: var(--text-body);
+    }
+    .md-help code {
+      background: rgba(201,168,76,0.1);
+      color: var(--gold-pale);
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.88rem;
+      margin-right: 6px;
+    }
+    .md-help .arrow {
+      color: var(--gold-dim);
+      margin: 0 6px;
+    }
+    .md-help .ex-bold { font-weight: 700; color: var(--gold-pale); }
+    .md-help .ex-italic { font-style: italic; color: var(--gold-pale); }
+    .md-help .ex-h {
+      font-family: 'Cinzel Decorative', serif;
+      color: var(--gold-pale);
+      font-size: 1.05rem;
+    }
+    .md-help .ex-quote {
+      border-left: 2px solid var(--gold);
+      padding-left: 10px;
+      font-style: italic;
+      color: var(--gold-pale);
+      display: inline-block;
+    }
+
     /* ── Insert button (small) ──────────────────────────────── */
     .btn-insert-note {
       background: transparent;
@@ -862,6 +917,17 @@
             <button type="button" onclick="mdPrefix('> ')" title="Quote">"</button>
             <button type="button" onclick="mdPrefix('- ')" title="Bullet list">List</button>
           </div>
+          <div class="md-help">
+            <p class="md-help-title">What the buttons do</p>
+            <ul>
+              <li><code>**text**</code><span class="arrow">&rarr;</span><span class="ex-bold">bold text</span></li>
+              <li><code>*text*</code><span class="arrow">&rarr;</span><span class="ex-italic">italic text</span></li>
+              <li><code>## Words</code><span class="arrow">&rarr;</span><span class="ex-h">a heading</span></li>
+              <li><code>&gt; Words</code><span class="arrow">&rarr;</span><span class="ex-quote">a quoted line</span></li>
+              <li><code>- Words</code><span class="arrow">&rarr;</span>a bullet point in a list</li>
+            </ul>
+            <p style="margin-top:8px; color:var(--gold-dim); font-size:0.88rem; font-style:italic;">Tip: leave a blank line between paragraphs.</p>
+          </div>
           <textarea id="f-body" placeholder="Start writing your reflection here..." required></textarea>
         </div>
 
@@ -915,6 +981,17 @@
             <button type="button" onclick="emailMdPrefix('## ')" title="Heading">H</button>
             <button type="button" onclick="emailMdPrefix('> ')" title="Quote">"</button>
             <button type="button" onclick="emailMdPrefix('- ')" title="Bullet list">List</button>
+          </div>
+          <div class="md-help">
+            <p class="md-help-title">What the buttons do</p>
+            <ul>
+              <li><code>**text**</code><span class="arrow">&rarr;</span><span class="ex-bold">bold text</span></li>
+              <li><code>*text*</code><span class="arrow">&rarr;</span><span class="ex-italic">italic text</span></li>
+              <li><code>## Words</code><span class="arrow">&rarr;</span><span class="ex-h">a heading</span></li>
+              <li><code>&gt; Words</code><span class="arrow">&rarr;</span><span class="ex-quote">a quoted line</span></li>
+              <li><code>- Words</code><span class="arrow">&rarr;</span>a bullet point in a list</li>
+            </ul>
+            <p style="margin-top:8px; color:var(--gold-dim); font-size:0.88rem; font-style:italic;">Tip: leave a blank line between paragraphs. Click <strong>Show Preview</strong> below to see how it will look.</p>
           </div>
           <button type="button" class="btn-insert-note" onclick="openNotePicker()">+ Insert a Sanctuary Note</button>
           <textarea id="e-body" placeholder="Start writing here..." required></textarea>

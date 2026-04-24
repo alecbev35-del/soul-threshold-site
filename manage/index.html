@@ -608,6 +608,143 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    /* ── Tabs ───────────────────────────────────────────────── */
+    .tab-bar {
+      display: flex;
+      gap: 4px;
+      padding: 0 24px;
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      background: rgba(10,14,42,0.4);
+    }
+    .tab {
+      background: none;
+      border: none;
+      color: var(--gold-dim);
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 16px 22px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.25s;
+      margin-bottom: -1px;
+    }
+    .tab:hover { color: var(--gold-light); }
+    .tab.active {
+      color: var(--gold-pale);
+      border-bottom-color: var(--gold);
+    }
+
+    /* ── Send Row (test + send) ─────────────────────────────── */
+    .send-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+    .send-row .btn-save { flex: 1; min-width: 180px; }
+    .btn-test {
+      background: transparent;
+      border: 1px solid rgba(201,168,76,0.4);
+      color: var(--gold-light);
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 16px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-test:hover {
+      border-color: var(--gold);
+      color: var(--gold-pale);
+      background: rgba(201,168,76,0.08);
+    }
+    .btn-test:disabled { opacity: 0.5; cursor: wait; }
+
+    /* ── Email list item ────────────────────────────────────── */
+    .email-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 6px;
+      margin-bottom: 10px;
+      background: rgba(10,14,42,0.4);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .email-item-info { flex: 1; min-width: 200px; }
+    .email-item-subject {
+      font-family: 'EB Garamond', serif;
+      font-size: 1.1rem;
+      color: var(--gold-pale);
+      margin-bottom: 4px;
+    }
+    .email-item-meta {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+    }
+    .email-item-meta.sent { color: #6ece95; }
+    .email-item-meta.draft { color: var(--gold-dim); }
+    .email-item-actions { display: flex; gap: 8px; }
+
+    /* ── Note picker modal ──────────────────────────────────── */
+    .picker-list {
+      max-height: 360px;
+      overflow-y: auto;
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 6px;
+      margin: 16px 0;
+    }
+    .picker-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .picker-item:last-child { border-bottom: none; }
+    .picker-item:hover { background: rgba(201,168,76,0.08); }
+    .picker-item-title {
+      color: var(--gold-pale);
+      font-size: 1rem;
+      margin-bottom: 2px;
+    }
+    .picker-item-meta {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold-dim);
+    }
+
+    /* ── Insert button (small) ──────────────────────────────── */
+    .btn-insert-note {
+      background: transparent;
+      border: 1px dashed rgba(201,168,76,0.4);
+      color: var(--gold-light);
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 10px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      transition: all 0.3s;
+    }
+    .btn-insert-note:hover {
+      border-style: solid;
+      border-color: var(--gold);
+      color: var(--gold-pale);
+    }
+
     /* ── Responsive ─────────────────────────────────────────── */
     @media (max-width: 600px) {
       .app-header { padding: 12px 16px; }
@@ -617,6 +754,8 @@
       .note-item { flex-direction: column; align-items: stretch; gap: 8px; }
       .note-item-actions { justify-content: flex-end; }
       .modal-actions { flex-direction: column; }
+      .tab-bar { padding: 0 12px; overflow-x: auto; }
+      .tab { padding: 14px 14px; font-size: 0.75rem; }
     }
   </style>
 </head>
@@ -653,10 +792,16 @@
     </div>
   </header>
 
+  <!-- Tabs -->
+  <nav class="tab-bar">
+    <button class="tab active" data-tab="notes" onclick="switchTab('notes')">Sanctuary Notes</button>
+    <button class="tab" data-tab="emails" onclick="switchTab('emails')">Emails</button>
+  </nav>
+
   <div class="content-area">
 
     <!-- ── Notes List View ──────────────────────────────── -->
-    <div id="view-list">
+    <div id="view-list" data-tab="notes">
       <div class="list-header">
         <h2>Your Sanctuary Notes</h2>
         <button class="btn-new" onclick="showEditor()">+ Write a New Note</button>
@@ -667,7 +812,7 @@
     </div>
 
     <!-- ── Editor View ──────────────────────────────────── -->
-    <div id="view-editor" class="hidden">
+    <div id="view-editor" class="hidden" data-tab="notes">
       <div class="editor-header">
         <h2 id="editor-title">New Sanctuary Note</h2>
         <button class="btn-cancel" onclick="showList()">Cancel</button>
@@ -736,8 +881,75 @@
       </form>
     </div>
 
+    <!-- ── Emails List View ─────────────────────────────── -->
+    <div id="view-emails-list" class="hidden" data-tab="emails">
+      <div class="list-header">
+        <h2>Your Emails</h2>
+        <button class="btn-new" onclick="showEmailEditor()">+ Write a New Email</button>
+      </div>
+      <div id="emails-list">
+        <div class="loading"><div class="spinner"></div><br>Loading your emails...</div>
+      </div>
+    </div>
+
+    <!-- ── Email Editor View ────────────────────────────── -->
+    <div id="view-email-editor" class="hidden" data-tab="emails">
+      <div class="editor-header">
+        <h2 id="email-editor-title">New Email</h2>
+        <button class="btn-cancel" onclick="showEmailsList()">Cancel</button>
+      </div>
+
+      <form id="email-form" onsubmit="handleEmailSave(event)">
+        <div class="form-group">
+          <label for="e-subject">Subject Line</label>
+          <span class="hint">This is what people see in their inbox before opening. Keep it clear and inviting.</span>
+          <input type="text" id="e-subject" placeholder="A quiet thought for the week" required />
+        </div>
+
+        <div class="form-group">
+          <label for="e-body">Email Body</label>
+          <span class="hint">Write naturally. Use the buttons for formatting. Click "Insert a Sanctuary Note" to add one of your notes into the email.</span>
+          <div class="md-toolbar">
+            <button type="button" onclick="emailMdWrap('**','**')" title="Bold"><strong>B</strong></button>
+            <button type="button" onclick="emailMdWrap('*','*')" title="Italic"><em>I</em></button>
+            <button type="button" onclick="emailMdPrefix('## ')" title="Heading">H</button>
+            <button type="button" onclick="emailMdPrefix('> ')" title="Quote">"</button>
+            <button type="button" onclick="emailMdPrefix('- ')" title="Bullet list">List</button>
+          </div>
+          <button type="button" class="btn-insert-note" onclick="openNotePicker()">+ Insert a Sanctuary Note</button>
+          <textarea id="e-body" placeholder="Start writing here..." required></textarea>
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-toggle">
+          <button type="button" onclick="toggleEmailPreview()">Show Preview</button>
+        </div>
+        <div id="email-preview-pane" class="preview-pane hidden"></div>
+
+        <div class="send-row">
+          <button type="button" class="btn-test" onclick="handleEmailSave(event, 'draft')">Save Draft</button>
+          <button type="button" class="btn-test" onclick="sendTestEmail()">Send Test to Me</button>
+          <button type="submit" class="btn-save" id="btn-send">Send to Subscribers</button>
+        </div>
+      </form>
+    </div>
+
   </div><!-- /content-area -->
 </div><!-- /app -->
+
+<!-- ── Note Picker Modal ──────────────────────────────── -->
+<div id="note-picker-modal" class="modal-overlay hidden">
+  <div class="modal-box" style="max-width:560px;">
+    <h3>Pick a Sanctuary Note</h3>
+    <p>Choose a note to insert into your email. The title, a short excerpt, and a link will be added.</p>
+    <div id="note-picker-list" class="picker-list">
+      <div class="loading"><div class="spinner"></div></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeNotePicker()">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <!-- ── Delete Confirmation Modal ──────────────────────── -->
 <div id="delete-modal" class="modal-overlay hidden">
@@ -1393,6 +1605,478 @@ function showToast(msg, type) {
   el.textContent = msg;
   el.className = `toast ${type} show`;
   setTimeout(() => { el.classList.remove('show'); }, 4000);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   EMAILS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const EMAILS_PATH = 'content/emails';
+let allEmails = [];          // { meta, body, filename, sha, content }
+let editingEmail = null;
+
+/* ── Tab Switching ─────────────────────────────────────────────────── */
+
+let currentTab = 'notes';
+
+function switchTab(tab) {
+  currentTab = tab;
+
+  // Update tab button states
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === tab);
+  });
+
+  // Hide all view panels (scoped inside .content-area so tab buttons are unaffected)
+  document.querySelectorAll('.content-area [data-tab]').forEach(el => {
+    el.classList.add('hidden');
+  });
+
+  // Show the list view for the active tab (never an editor — starts fresh)
+  if (tab === 'notes') {
+    document.getElementById('view-list').classList.remove('hidden');
+  } else {
+    document.getElementById('view-emails-list').classList.remove('hidden');
+    if (!allEmails.length) loadEmails();
+  }
+
+  window.scrollTo(0, 0);
+}
+
+/* ── Load Emails ───────────────────────────────────────────────────── */
+
+async function loadEmails() {
+  const listEl = document.getElementById('emails-list');
+  listEl.innerHTML = '<div class="loading"><div class="spinner"></div><br>Loading your emails...</div>';
+
+  try {
+    const files = await apiGet(EMAILS_PATH).catch(err => {
+      // If the folder doesn't exist yet, treat as empty
+      if (String(err).includes('404')) return [];
+      throw err;
+    });
+
+    allEmails = [];
+    for (const file of (files || [])) {
+      if (!file.name.endsWith('.md')) continue;
+      const fileData = await apiGet(`${EMAILS_PATH}/${file.name}`);
+      const content = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ''))));
+      const { meta, body } = parseFrontmatter(content);
+      allEmails.push({ meta, body, filename: file.name, sha: fileData.sha, content });
+    }
+
+    // Most recent first
+    allEmails.sort((a, b) => (b.meta.date || '').localeCompare(a.meta.date || ''));
+    renderEmailsList();
+
+  } catch (err) {
+    console.error('Failed to load emails:', err);
+    listEl.innerHTML = `<div class="empty-state">Something went wrong loading your emails.<br><br>Try refreshing the page. If it keeps happening, try logging out and back in.</div>`;
+  }
+}
+
+function renderEmailsList() {
+  const listEl = document.getElementById('emails-list');
+  if (!allEmails.length) {
+    listEl.innerHTML = `<div class="empty-state">You haven't written any emails yet.<br><br>Click the button above to write your first one.</div>`;
+    return;
+  }
+
+  let html = '';
+  allEmails.forEach(e => {
+    const subject = e.meta.subject || '(No subject)';
+    const status = e.meta.status || 'draft';
+    const statusLabel = status === 'sent'
+      ? `Sent ${formatDate(e.meta.sent_at || e.meta.date)}`
+      : `Draft · ${formatDate(e.meta.date)}`;
+    html += `
+      <div class="email-item">
+        <div class="email-item-info">
+          <div class="email-item-subject">${escHtml(subject)}</div>
+          <div class="email-item-meta ${status}">${statusLabel}</div>
+        </div>
+        <div class="email-item-actions">
+          ${status === 'draft'
+            ? `<button class="btn-edit" onclick="editEmail('${escAttr(e.filename)}')">Edit</button>`
+            : `<button class="btn-edit" onclick="editEmail('${escAttr(e.filename)}')">View</button>`}
+          <button class="btn-delete" onclick="showDeleteEmailModal('${escAttr(e.filename)}')">Delete</button>
+        </div>
+      </div>
+    `;
+  });
+  listEl.innerHTML = html;
+}
+
+function formatDate(s) {
+  if (!s) return '';
+  try {
+    return new Date(s.length > 10 ? s : s + 'T00:00:00').toLocaleDateString('en-US', {
+      year: 'numeric', month: 'short', day: 'numeric'
+    });
+  } catch { return s; }
+}
+
+/* ── View Switching for Emails ─────────────────────────────────────── */
+
+function showEmailsList() {
+  editingEmail = null;
+  document.getElementById('view-email-editor').classList.add('hidden');
+  document.getElementById('view-emails-list').classList.remove('hidden');
+  document.getElementById('email-preview-pane').classList.add('hidden');
+  window.scrollTo(0, 0);
+}
+
+function showEmailEditor(email) {
+  editingEmail = email || null;
+  document.getElementById('view-emails-list').classList.add('hidden');
+  document.getElementById('view-email-editor').classList.remove('hidden');
+  document.getElementById('email-preview-pane').classList.add('hidden');
+
+  const titleEl = document.getElementById('email-editor-title');
+  const sendBtn = document.getElementById('btn-send');
+
+  if (email) {
+    const isSent = email.meta.status === 'sent';
+    titleEl.textContent = isSent ? 'Sent Email' : 'Edit Draft';
+    document.getElementById('e-subject').value = email.meta.subject || '';
+    document.getElementById('e-body').value = email.body || '';
+
+    // If already sent, disable send button and mark fields read-only
+    sendBtn.disabled = isSent;
+    sendBtn.textContent = isSent ? 'Already Sent' : 'Send to Subscribers';
+    document.getElementById('e-subject').readOnly = isSent;
+    document.getElementById('e-body').readOnly = isSent;
+  } else {
+    titleEl.textContent = 'New Email';
+    document.getElementById('email-form').reset();
+    sendBtn.disabled = false;
+    sendBtn.textContent = 'Send to Subscribers';
+    document.getElementById('e-subject').readOnly = false;
+    document.getElementById('e-body').readOnly = false;
+  }
+
+  window.scrollTo(0, 0);
+}
+
+function editEmail(filename) {
+  const email = allEmails.find(e => e.filename === filename);
+  if (email) showEmailEditor(email);
+}
+
+/* ── Markdown Toolbar (Email) ──────────────────────────────────────── */
+
+function emailMdWrap(before, after) {
+  const ta = document.getElementById('e-body');
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  const text = ta.value;
+  const selected = text.slice(start, end);
+  ta.value = text.slice(0, start) + before + selected + after + text.slice(end);
+  ta.focus();
+  ta.setSelectionRange(start + before.length, end + before.length);
+}
+
+function emailMdPrefix(prefix) {
+  const ta = document.getElementById('e-body');
+  const start = ta.selectionStart;
+  const text = ta.value;
+  const lineStart = text.lastIndexOf('\n', start - 1) + 1;
+  ta.value = text.slice(0, lineStart) + prefix + text.slice(lineStart);
+  ta.focus();
+  ta.setSelectionRange(start + prefix.length, start + prefix.length);
+}
+
+/* ── Preview (Email) ───────────────────────────────────────────────── */
+
+function toggleEmailPreview() {
+  const pane = document.getElementById('email-preview-pane');
+  const hidden = pane.classList.contains('hidden');
+  if (hidden) {
+    updateEmailPreview();
+    pane.classList.remove('hidden');
+  } else {
+    pane.classList.add('hidden');
+  }
+}
+
+function updateEmailPreview() {
+  const subject = document.getElementById('e-subject').value.trim();
+  const body = document.getElementById('e-body').value;
+  const pane = document.getElementById('email-preview-pane');
+  pane.innerHTML = `
+    <h1>${escHtml(subject || '(No subject)')}</h1>
+    <div class="preview-body">${markdownToHtml(body)}</div>
+  `;
+}
+
+/* ── Note Picker ───────────────────────────────────────────────────── */
+
+async function openNotePicker() {
+  document.getElementById('note-picker-modal').classList.remove('hidden');
+
+  // If notes haven't been loaded yet (user never visited the Notes tab), load them
+  if (!allNotes.length) {
+    document.getElementById('note-picker-list').innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+    await loadNotes();
+  }
+  renderNotePicker();
+}
+
+function renderNotePicker() {
+  const el = document.getElementById('note-picker-list');
+  if (!allNotes.length) {
+    el.innerHTML = '<div class="empty-state" style="padding:24px;">You haven\'t written any Sanctuary Notes yet.</div>';
+    return;
+  }
+
+  let html = '';
+  // Most recent (highest note_number) first
+  const sorted = [...allNotes].sort((a, b) => (b.meta.note_number || '').localeCompare(a.meta.note_number || ''));
+  sorted.forEach(n => {
+    const num = n.meta.note_number || '???';
+    const title = n.meta.title || 'Untitled';
+    html += `
+      <div class="picker-item" onclick="insertNoteIntoEmail('${escAttr(n.filename)}')">
+        <div class="picker-item-title">${escHtml(title)}</div>
+        <div class="picker-item-meta">Note ${num} · ${sectionLabelFromKey(n.meta.section || '')}</div>
+      </div>
+    `;
+  });
+  el.innerHTML = html;
+}
+
+function closeNotePicker() {
+  document.getElementById('note-picker-modal').classList.add('hidden');
+}
+
+function insertNoteIntoEmail(filename) {
+  const note = allNotes.find(n => n.filename === filename);
+  if (!note) return;
+
+  const num = note.meta.note_number || '';
+  const title = note.meta.title || 'Untitled';
+  const slug = filename.replace(/^\d{3}-/, '').replace(/\.md$/, '');
+  const url = `https://thesoulthreshold.com/blog/${slug}`;
+
+  // Build a short excerpt: first paragraph, trimmed to ~240 chars
+  const bodyText = (note.body || '').replace(/^#+ .+$/gm, '').trim();
+  const firstPara = bodyText.split(/\n\n/)[0].replace(/[*#>`_\-]/g, '').trim();
+  const excerpt = firstPara.length > 240 ? firstPara.slice(0, 237) + '...' : firstPara;
+
+  const block = `\n\n## ${title}\n\n*Sanctuary Note ${num}*\n\n${excerpt}\n\n[Read the full note →](${url})\n\n`;
+
+  const ta = document.getElementById('e-body');
+  const cursor = ta.selectionStart;
+  ta.value = ta.value.slice(0, cursor) + block + ta.value.slice(cursor);
+  ta.focus();
+  ta.setSelectionRange(cursor + block.length, cursor + block.length);
+
+  closeNotePicker();
+}
+
+/* ── Save / Send Email ─────────────────────────────────────────────── */
+
+function buildEmailFrontmatter(data) {
+  let fm = '---\n';
+  fm += `subject: "${(data.subject || '').replace(/"/g, '\\"')}"\n`;
+  fm += `status: "${data.status}"\n`;
+  fm += `date: "${data.date}"\n`;
+  if (data.sent_at) fm += `sent_at: "${data.sent_at}"\n`;
+  if (data.campaign_id) fm += `campaign_id: "${data.campaign_id}"\n`;
+  fm += '---\n\n';
+  fm += data.body || '';
+  return fm;
+}
+
+function buildEmailHtmlDocument(subject, bodyMarkdown) {
+  const bodyHtml = markdownToHtml(bodyMarkdown)
+    .replace(/<h1>/g, '<h1 style="font-family:Georgia,serif;color:#1a1a1a;font-size:1.6rem;margin:24px 0 12px;">')
+    .replace(/<h2>/g, '<h2 style="font-family:Georgia,serif;color:#1a1a1a;font-size:1.3rem;margin:24px 0 10px;">')
+    .replace(/<h3>/g, '<h3 style="font-family:Georgia,serif;color:#1a1a1a;font-size:1.1rem;margin:20px 0 8px;">')
+    .replace(/<p>/g, '<p style="margin:0 0 16px;line-height:1.7;">')
+    .replace(/<blockquote>/g, '<blockquote style="margin:16px 0;padding:8px 20px;border-left:3px solid #c9a84c;color:#5a5240;font-style:italic;">')
+    .replace(/<strong>/g, '<strong style="color:#1a1a1a;">')
+    .replace(/<em>/g, '<em style="color:#5a5240;">')
+    .replace(/<a /g, '<a style="color:#8a6d2f;text-decoration:underline;" ')
+    .replace(/<ul>/g, '<ul style="margin:12px 0 16px 24px;">')
+    .replace(/<li>/g, '<li style="margin-bottom:6px;">');
+
+  return `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtml(subject)}</title>
+</head>
+<body style="margin:0;padding:0;background:#fdfaf3;font-family:Georgia,serif;color:#2d2a20;">
+  <div style="max-width:600px;margin:0 auto;padding:40px 28px;">
+    <div style="text-align:center;padding-bottom:24px;border-bottom:1px solid #e5dcc2;">
+      <div style="font-size:0.75rem;letter-spacing:0.25em;text-transform:uppercase;color:#8a6d2f;">Sanctuary Notes</div>
+      <div style="font-size:1.5rem;color:#1a1a1a;margin-top:8px;font-family:Georgia,serif;">Soul Threshold</div>
+    </div>
+    <div style="padding:32px 0;font-size:17px;line-height:1.7;color:#2d2a20;">
+      ${bodyHtml}
+    </div>
+    <div style="text-align:center;padding-top:28px;border-top:1px solid #e5dcc2;color:#8a6d2f;font-size:0.85rem;line-height:1.7;">
+      Soul Threshold · Intuitive Mentoring<br>
+      <a href="https://thesoulthreshold.com" style="color:#8a6d2f;">thesoulthreshold.com</a>
+      <br><br>
+      <span style="font-size:0.75rem;color:#a89668;">
+        You're receiving this because you joined Sanctuary Notes.<br>
+        <a href="{$unsubscribe}" style="color:#a89668;">Unsubscribe</a>
+      </span>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+async function handleEmailSave(e, mode) {
+  if (e && e.preventDefault) e.preventDefault();
+
+  // Called from submit button = send mode; from Save Draft button = draft
+  const action = mode || (e && e.type === 'submit' ? 'send' : 'draft');
+
+  const sendBtn = document.getElementById('btn-send');
+  const subject = document.getElementById('e-subject').value.trim();
+  const body = document.getElementById('e-body').value.trim();
+
+  if (!subject) { showToast('Add a subject line first.', 'error'); return; }
+  if (!body)    { showToast('The email body is empty.', 'error'); return; }
+
+  // Confirm before sending to the whole list
+  if (action === 'send') {
+    const ok = confirm(`Send "${subject}" to all your subscribers now?\n\nThis can't be undone.`);
+    if (!ok) return;
+  }
+
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0, 10);
+  const slug = slugify(subject).slice(0, 60) || 'untitled';
+
+  // Prefer existing filename if editing a draft; otherwise new date-slug filename
+  let filename = editingEmail ? editingEmail.filename : `${dateStr}-${slug}.md`;
+  let sha = editingEmail ? editingEmail.sha : null;
+
+  // Disable buttons while working
+  sendBtn.disabled = true;
+  const originalBtnText = sendBtn.textContent;
+  sendBtn.textContent = action === 'send' ? 'Sending...' : 'Saving...';
+
+  try {
+    let campaignId = editingEmail?.meta?.campaign_id || '';
+    let sentAt = editingEmail?.meta?.sent_at || '';
+    let finalStatus = action === 'send' ? 'sent' : 'draft';
+
+    // If sending, fire the Netlify function first
+    if (action === 'send') {
+      const html = buildEmailHtmlDocument(subject, body);
+      const result = await sendCampaign({ subject, html });
+      campaignId = result.campaignId || '';
+      sentAt = now.toISOString();
+    }
+
+    // Write the markdown record
+    const fileContent = buildEmailFrontmatter({
+      subject,
+      status: finalStatus,
+      date: editingEmail?.meta?.date || dateStr,
+      sent_at: sentAt,
+      campaign_id: campaignId,
+      body
+    });
+    const commitMsg = action === 'send'
+      ? `Send email: ${subject}`
+      : editingEmail ? `Update draft email: ${subject}` : `Save draft email: ${subject}`;
+
+    await apiPut(`${EMAILS_PATH}/${filename}`, fileContent, sha, commitMsg);
+
+    showToast(action === 'send' ? 'Email sent to subscribers!' : 'Draft saved.', 'success');
+    await loadEmails();
+    showEmailsList();
+
+  } catch (err) {
+    console.error('Email save/send error:', err);
+    const msg = (err && err.message) ? err.message : String(err);
+    showToast(msg.length > 160 ? msg.slice(0, 160) + '...' : msg, 'error');
+    sendBtn.disabled = false;
+    sendBtn.textContent = originalBtnText;
+  }
+}
+
+async function sendTestEmail() {
+  const subject = document.getElementById('e-subject').value.trim();
+  const body = document.getElementById('e-body').value.trim();
+  if (!subject || !body) { showToast('Add a subject and body first.', 'error'); return; }
+
+  const user = netlifyIdentity.currentUser();
+  const testEmail = user?.email;
+  if (!testEmail) { showToast('Could not find your email address.', 'error'); return; }
+
+  const ok = confirm(`Send a test of "${subject}" to ${testEmail}?\n\n(Only you will receive it. Your subscribers will not.)`);
+  if (!ok) return;
+
+  showToast('Sending test email...', 'success');
+  try {
+    const html = buildEmailHtmlDocument(subject, body);
+    await sendCampaign({ subject, html, testEmail });
+    showToast(`Test email sent to ${testEmail}. Check your inbox.`, 'success');
+  } catch (err) {
+    console.error('Test send error:', err);
+    showToast((err && err.message) || 'Test send failed.', 'error');
+  }
+}
+
+async function sendCampaign({ subject, html, testEmail }) {
+  const token = await getToken();
+  const res = await fetch('/.netlify/functions/send-email', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ subject, html, testEmail })
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || data.error) {
+    throw new Error(data.error || `Send failed (${res.status})`);
+  }
+  return data;
+}
+
+/* ── Delete Email ──────────────────────────────────────────────────── */
+
+let deleteEmailTarget = null;
+
+function showDeleteEmailModal(filename) {
+  const email = allEmails.find(e => e.filename === filename);
+  if (!email) return;
+  deleteEmailTarget = { filename: email.filename, sha: email.sha, subject: email.meta.subject };
+  document.getElementById('delete-modal-msg').textContent =
+    `Are you sure you want to delete "${email.meta.subject}"? This cannot be undone.`;
+  // Point the modal's confirm button at email deletion
+  const modalBtn = document.querySelector('#delete-modal .btn-confirm-delete');
+  modalBtn.onclick = confirmDeleteEmail;
+  document.getElementById('delete-modal').classList.remove('hidden');
+}
+
+async function confirmDeleteEmail() {
+  if (!deleteEmailTarget) return;
+  const { filename, sha, subject } = deleteEmailTarget;
+  closeDeleteModal();
+  // Restore note-deletion handler so future note deletes work
+  document.querySelector('#delete-modal .btn-confirm-delete').onclick = confirmDelete;
+
+  try {
+    await apiDelete(`${EMAILS_PATH}/${filename}`, sha, `Delete email: ${subject}`);
+    showToast('Email deleted.', 'success');
+    await loadEmails();
+  } catch (err) {
+    console.error('Email delete error:', err);
+    showToast('Something went wrong. Please try again.', 'error');
+  }
+  deleteEmailTarget = null;
 }
 
 /* ── Init ──────────────────────────────────────────────────────────── */

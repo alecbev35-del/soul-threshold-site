@@ -1,5 +1,6 @@
 [build]
   publish = "."
+  functions = "netlify/functions"
 
 # Redirect /blog/slug to /blog.html?post=slug for clean blog URLs
 [[redirects]]
